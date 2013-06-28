@@ -1,9 +1,7 @@
 src_dir:
   - 'src'
 src_files:
-  - 'lib/jquery/jquery.min.js'
-  - 'lib/parser/src/parser.js'
-  - 'validator.js'
+  - 'parser.js'
 stylesheets:
 boot_dir: 'spec/support'
 boot_files:

@@ -1,0 +1,14 @@
+{
+  "name": "Form validator",
+  "version": "0.0.1",
+  "main": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "libs"
+  ],
+  "dependencies": {
+    "jquery": "1.10.1",
+    "parser": "https://github.com/Cabana/parser.git"
+  }
+}
