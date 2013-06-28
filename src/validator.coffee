@@ -1,6 +1,5 @@
 class @FormValidator
   constructor: ->
-    console.log @validations
     @parser = new Parser @validations
 
   validations:

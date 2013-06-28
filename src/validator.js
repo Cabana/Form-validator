@@ -4,7 +4,6 @@
 
   this.FormValidator = (function() {
     function FormValidator() {
-      console.log(this.validations);
       this.parser = new Parser(this.validations);
     }
 
