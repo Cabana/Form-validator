@@ -90,18 +90,14 @@
             var node;
 
             node = sandbox('<input data-validation="length:[max:3]" value="f" type="email">');
+            expect(this.validator.validateInput(node)).toBe(true);
+            node = sandbox('<input data-validation="length:[max:3]" value="fff" type="email">');
             return expect(this.validator.validateInput(node)).toBe(true);
           });
-          it('returns false if the input value is out of range', function() {
+          return it('returns false if the input value is out of range', function() {
             var node;
 
             node = sandbox('<input data-validation="length:[max:3]" value="aiudshfiuahsdlifuah" type="email">');
-            return expect(this.validator.validateInput(node)).toBe(false);
-          });
-          return it('returns false if the input is exactly the max length', function() {
-            var node;
-
-            node = sandbox('<input data-validation="length:[max:3]" value="fff" type="email">');
             return expect(this.validator.validateInput(node)).toBe(false);
           });
         });
@@ -110,6 +106,10 @@
             var node;
 
             node = sandbox('<input data-validation="length:[min:1, max:10]" value="foo" type="email">');
+            expect(this.validator.validateInput(node)).toBe(true);
+            node = sandbox('<input data-validation="length:[min:1, max:10]" value="f" type="email">');
+            expect(this.validator.validateInput(node)).toBe(true);
+            node = sandbox('<input data-validation="length:[min:1, max:10]" value="qwertyuiop" type="email">');
             return expect(this.validator.validateInput(node)).toBe(true);
           });
           return it('returns false if the input value is out of range', function() {
@@ -151,7 +151,7 @@
         });
       });
       return describe('word count', function() {
-        return describe('with only a min attribute', function() {
+        describe('with only a min attribute', function() {
           it('returns true if the word count is within range', function() {
             var node;
 
@@ -164,6 +164,22 @@
             var node;
 
             node = sandbox('<input data-validation="wordCount:[min:2]" value="foo" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(false);
+          });
+        });
+        return describe('with only a max attribute', function() {
+          it('returns true if the input value is within range', function() {
+            var node;
+
+            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo bar" type="email">');
+            expect(this.validator.validateInput(node)).toBe(true);
+            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo mads bar" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(true);
+          });
+          return it('returns false if the input value out of range', function() {
+            var node;
+
+            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo bar bax mads" type="email">');
             return expect(this.validator.validateInput(node)).toBe(false);
           });
         });

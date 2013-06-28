@@ -60,18 +60,20 @@ describe 'Validator', ->
         it 'returns true if the input value is within range', ->
           node = sandbox '<input data-validation="length:[max:3]" value="f" type="email">'
           expect( @validator.validateInput node ).toBe true
+          node = sandbox '<input data-validation="length:[max:3]" value="fff" type="email">'
+          expect( @validator.validateInput node ).toBe true
 
         it 'returns false if the input value is out of range', ->
           node = sandbox '<input data-validation="length:[max:3]" value="aiudshfiuahsdlifuah" type="email">'
           expect( @validator.validateInput node ).toBe false
 
-        it 'returns false if the input is exactly the max length', ->
-          node = sandbox '<input data-validation="length:[max:3]" value="fff" type="email">'
-          expect( @validator.validateInput node ).toBe false
-
       describe 'with both a min and max range', ->
         it 'returns true if the input value is within range', ->
           node = sandbox '<input data-validation="length:[min:1, max:10]" value="foo" type="email">'
+          expect( @validator.validateInput node ).toBe true
+          node = sandbox '<input data-validation="length:[min:1, max:10]" value="f" type="email">'
+          expect( @validator.validateInput node ).toBe true
+          node = sandbox '<input data-validation="length:[min:1, max:10]" value="qwertyuiop" type="email">'
           expect( @validator.validateInput node ).toBe true
 
         it 'returns false if the input value is out of range', ->
@@ -108,4 +110,15 @@ describe 'Validator', ->
 
         it 'returns false if the word count is out of range', ->
           node = sandbox '<input data-validation="wordCount:[min:2]" value="foo" type="email">'
+          expect( @validator.validateInput node ).toBe false
+
+      describe 'with only a max attribute', ->
+        it 'returns true if the input value is within range', ->
+          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo bar" type="email">'
+          expect( @validator.validateInput node ).toBe true
+          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo mads bar" type="email">'
+          expect( @validator.validateInput node ).toBe true
+
+        it 'returns false if the input value out of range', ->
+          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo bar bax mads" type="email">'
           expect( @validator.validateInput node ).toBe false

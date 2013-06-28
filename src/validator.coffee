@@ -31,7 +31,7 @@ class @FormValidator
       else if min
         isValid.push value.length >= min
       else if max
-        isValid.push value.length < max
+        isValid.push value.length <= max
 
     # Validate wordCount
     Object.keys(wordCount).forEach (key) ->
@@ -43,7 +43,7 @@ class @FormValidator
       else if min
         isValid.push value.split(regex).length >= min
       else if max
-        isValid.push value.split(regex).length < max
+        isValid.push value.split(regex).length <= max
 
     if value == '' && validationObject.allowEmpty
       isValid = [true]

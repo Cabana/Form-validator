@@ -42,7 +42,7 @@
         } else if (min) {
           return isValid.push(value.length >= min);
         } else if (max) {
-          return isValid.push(value.length < max);
+          return isValid.push(value.length <= max);
         }
       });
       Object.keys(wordCount).forEach(function(key) {
@@ -60,7 +60,7 @@
         } else if (min) {
           return isValid.push(value.split(regex).length >= min);
         } else if (max) {
-          return isValid.push(value.split(regex).length < max);
+          return isValid.push(value.split(regex).length <= max);
         }
       });
       if (value === '' && validationObject.allowEmpty) {
