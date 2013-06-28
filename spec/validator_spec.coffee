@@ -1,8 +1,13 @@
 describe 'Validator', ->
-  describe '#validateInput', ->
-    beforeEach ->
-      @validator = new FormValidator
+  beforeEach ->
+    @validator = new FormValidator
 
+  describe '#defineCustomValidation', ->
+    it 'defines a new validation format', ->
+      @validator.defineCustomValidation 'cpr', "/\\d{6}-\\d{4}/"
+      expect( @validator.validations.cpr ).toEqual "/\\d{6}-\\d{4}/"
+
+  describe '#validateInput', ->
     describe 'format validation', ->
       describe 'email', ->
         it 'returns true if the input contains a valid email', ->
@@ -21,6 +26,12 @@ describe 'Validator', ->
         it 'returns false if the input contains an invalid telephone number', ->
           node = sandbox '<input data-validation="format:[tel]" value="123" type="tel">'
           expect( @validator.validateInput node ).toBe false
+
+      describe 'a custom format', ->
+        it 'returns true if the format matches', ->
+          @validator.defineCustomValidation 'cpr', "\\d{6}-\\d{4}"
+          node = sandbox '<input data-validation="format:[cpr]" value="060890-1234" type="text">'
+          expect( @validator.validateInput node ).toBe true
 
     describe 'required validation', ->
       it 'returns true if the input has a value', ->

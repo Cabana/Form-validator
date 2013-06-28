@@ -1,9 +1,12 @@
 class @FormValidator
   constructor: ->
-    @parser = new Parser
-      email: '.+@.+\\..+',
-      tel: '\\d{8}',
-      required: '.+'
+    console.log @validations
+    @parser = new Parser @validations
+
+  validations:
+    email: '.+@.+\\..+',
+    tel: '\\d{8}',
+    required: '.+'
 
   validateInput: (input) ->
     value = input.value
@@ -50,6 +53,9 @@ class @FormValidator
       false
     else
       true
+
+  defineCustomValidation: (name, regex) ->
+    @parser.addDefaultValue name, regex
 
   _generateValidationObject: (string) ->
     @parser.parse string

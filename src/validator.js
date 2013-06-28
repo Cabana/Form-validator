@@ -4,12 +4,15 @@
 
   this.FormValidator = (function() {
     function FormValidator() {
-      this.parser = new Parser({
-        email: '.+@.+\\..+',
-        tel: '\\d{8}',
-        required: '.+'
-      });
+      console.log(this.validations);
+      this.parser = new Parser(this.validations);
     }
+
+    FormValidator.prototype.validations = {
+      email: '.+@.+\\..+',
+      tel: '\\d{8}',
+      required: '.+'
+    };
 
     FormValidator.prototype.validateInput = function(input) {
       var format, isValid, length, validationObject, value, wordCount;
@@ -69,6 +72,10 @@
       } else {
         return true;
       }
+    };
+
+    FormValidator.prototype.defineCustomValidation = function(name, regex) {
+      return this.parser.addDefaultValue(name, regex);
     };
 
     FormValidator.prototype._generateValidationObject = function(string) {
