@@ -10,7 +10,7 @@
         return expect(this.validator.validations.cpr).toEqual("/\\d{6}-\\d{4}/");
       });
     });
-    return describe('#validateInput', function() {
+    describe('#validateInput', function() {
       describe('format validation', function() {
         describe('email', function() {
           it('returns true if the input contains a valid email', function() {
@@ -183,6 +183,22 @@
             return expect(this.validator.validateInput(node)).toBe(false);
           });
         });
+      });
+    });
+    return describe('#validateForm', function() {
+      it('returns true if all the inputs with validation within the form are valid', function() {
+        var formHTML, formNode;
+
+        formHTML = "<form action=\"javascript:void()\">\n  <input data-validation=\"format:[email]\" type=\"email\" value=\"david.pdrsn@gmail.com\">\n  <input type=\"submit\">\n</form>";
+        formNode = sandbox(formHTML);
+        return expect(this.validator.validateForm(formNode)).toBe(true);
+      });
+      return it('returns false if the form contains invalid inputs', function() {
+        var formHTML, formNode;
+
+        formHTML = "<form action=\"javascript:void()\">\n  <input data-validation=\"format:[email]\" type=\"email\" value=\"invalid email\">\n  <input type=\"submit\">\n</form>";
+        formNode = sandbox(formHTML);
+        return expect(this.validator.validateForm(formNode)).toBe(false);
       });
     });
   });

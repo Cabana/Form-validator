@@ -56,5 +56,16 @@ class @FormValidator
   defineCustomValidation: (name, regex) ->
     @parser.addDefaultValue name, regex
 
+  validateForm: (form) ->
+    validationResults = []
+
+    for input in form.querySelectorAll('input[data-validation], textarea[data-validation]')
+      validationResults.push @.validateInput input
+
+    if false in validationResults
+      false
+    else
+      true
+
   _generateValidationObject: (string) ->
     @parser.parse string

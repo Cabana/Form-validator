@@ -122,3 +122,25 @@ describe 'Validator', ->
         it 'returns false if the input value out of range', ->
           node = sandbox '<input data-validation="wordCount:[max:3]" value="foo bar bax mads" type="email">'
           expect( @validator.validateInput node ).toBe false
+
+  describe '#validateForm', ->
+
+    it 'returns true if all the inputs with validation within the form are valid', ->
+      formHTML = """
+              <form action="javascript:void()">
+                <input data-validation="format:[email]" type="email" value="david.pdrsn@gmail.com">
+                <input type="submit">
+              </form>
+             """
+      formNode = sandbox formHTML
+      expect( @validator.validateForm formNode ).toBe true
+
+    it 'returns false if the form contains invalid inputs', ->
+      formHTML = """
+              <form action="javascript:void()">
+                <input data-validation="format:[email]" type="email" value="invalid email">
+                <input type="submit">
+              </form>
+             """
+      formNode = sandbox formHTML
+      expect( @validator.validateForm formNode ).toBe false

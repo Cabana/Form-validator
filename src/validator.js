@@ -77,6 +77,22 @@
       return this.parser.addDefaultValue(name, regex);
     };
 
+    FormValidator.prototype.validateForm = function(form) {
+      var input, validationResults, _i, _len, _ref;
+
+      validationResults = [];
+      _ref = form.querySelectorAll('input[data-validation], textarea[data-validation]');
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        input = _ref[_i];
+        validationResults.push(this.validateInput(input));
+      }
+      if (__indexOf.call(validationResults, false) >= 0) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
     FormValidator.prototype._generateValidationObject = function(string) {
       return this.parser.parse(string);
     };
