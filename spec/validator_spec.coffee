@@ -41,6 +41,10 @@ describe 'Validator', ->
           node = sandbox '<input data-validation="length:[min:3]" value="f" type="email">'
           expect( @validator.validateInput node ).toBe false
 
+        it 'returns true if the input value is exactly the min length', ->
+          node = sandbox '<input data-validation="length:[min:3]" value="fff" type="email">'
+          expect( @validator.validateInput node ).toBe true
+
       describe 'with only a max attribute', ->
         it 'returns true if the input value is within range', ->
           node = sandbox '<input data-validation="length:[max:3]" value="f" type="email">'
@@ -50,6 +54,10 @@ describe 'Validator', ->
           node = sandbox '<input data-validation="length:[max:3]" value="aiudshfiuahsdlifuah" type="email">'
           expect( @validator.validateInput node ).toBe false
 
+        it 'returns false if the input is exactly the max length', ->
+          node = sandbox '<input data-validation="length:[max:3]" value="fff" type="email">'
+          expect( @validator.validateInput node ).toBe false
+
       describe 'with both a min and max range', ->
         it 'returns true if the input value is within range', ->
           node = sandbox '<input data-validation="length:[min:1, max:10]" value="foo" type="email">'
@@ -57,6 +65,17 @@ describe 'Validator', ->
 
         it 'returns false if the input value is out of range', ->
           node = sandbox '<input data-validation="length:[min:1, max:10]" value="ahdsfoiuagosyudgfoausyhdf" type="email">'
+          expect( @validator.validateInput node ).toBe false
+
+      describe 'with an exact length', ->
+        it 'returns true if the input value is exactly the specified length', ->
+          node = sandbox '<input data-validation="length:[min:3, max:3]" value="fff" type="email">'
+          expect( @validator.validateInput node ).toBe true
+
+        it 'returns false if the input value is out of the range', ->
+          node = sandbox '<input data-validation="length:[min:3, max:3]" value="f" type="email">'
+          expect( @validator.validateInput node ).toBe false
+          node = sandbox '<input data-validation="length:[min:3, max:3]" value="fffffff" type="email">'
           expect( @validator.validateInput node ).toBe false
 
     describe 'allow empty', ->

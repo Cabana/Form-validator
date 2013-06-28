@@ -57,11 +57,17 @@
             node = sandbox('<input data-validation="length:[min:3]" value="fkasdjfasjfkg" type="email">');
             return expect(this.validator.validateInput(node)).toBe(true);
           });
-          return it('returns false if the input value is out of range', function() {
+          it('returns false if the input value is out of range', function() {
             var node;
 
             node = sandbox('<input data-validation="length:[min:3]" value="f" type="email">');
             return expect(this.validator.validateInput(node)).toBe(false);
+          });
+          return it('returns true if the input value is exactly the min length', function() {
+            var node;
+
+            node = sandbox('<input data-validation="length:[min:3]" value="fff" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(true);
           });
         });
         describe('with only a max attribute', function() {
@@ -71,14 +77,20 @@
             node = sandbox('<input data-validation="length:[max:3]" value="f" type="email">');
             return expect(this.validator.validateInput(node)).toBe(true);
           });
-          return it('returns false if the input value is out of range', function() {
+          it('returns false if the input value is out of range', function() {
             var node;
 
             node = sandbox('<input data-validation="length:[max:3]" value="aiudshfiuahsdlifuah" type="email">');
             return expect(this.validator.validateInput(node)).toBe(false);
           });
+          return it('returns false if the input is exactly the max length', function() {
+            var node;
+
+            node = sandbox('<input data-validation="length:[max:3]" value="fff" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(false);
+          });
         });
-        return describe('with both a min and max range', function() {
+        describe('with both a min and max range', function() {
           it('returns true if the input value is within range', function() {
             var node;
 
@@ -89,6 +101,22 @@
             var node;
 
             node = sandbox('<input data-validation="length:[min:1, max:10]" value="ahdsfoiuagosyudgfoausyhdf" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(false);
+          });
+        });
+        return describe('with an exact length', function() {
+          it('returns true if the input value is exactly the specified length', function() {
+            var node;
+
+            node = sandbox('<input data-validation="length:[min:3, max:3]" value="fff" type="email">');
+            return expect(this.validator.validateInput(node)).toBe(true);
+          });
+          return it('returns false if the input value is out of the range', function() {
+            var node;
+
+            node = sandbox('<input data-validation="length:[min:3, max:3]" value="f" type="email">');
+            expect(this.validator.validateInput(node)).toBe(false);
+            node = sandbox('<input data-validation="length:[min:3, max:3]" value="fffffff" type="email">');
             return expect(this.validator.validateInput(node)).toBe(false);
           });
         });

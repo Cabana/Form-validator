@@ -38,7 +38,7 @@
             return _results;
           }).apply(this), _ref) >= 0));
         } else if (min) {
-          return isValid.push(value.length > min);
+          return isValid.push(value.length >= min);
         } else if (max) {
           return isValid.push(value.length < max);
         }

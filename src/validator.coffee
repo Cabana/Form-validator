@@ -27,7 +27,7 @@ class @FormValidator
       if min && max
         isValid.push value.length in [min..max]
       else if min
-        isValid.push value.length > min
+        isValid.push value.length >= min
       else if max
         isValid.push value.length < max
 
