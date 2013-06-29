@@ -71,7 +71,11 @@ class @FormValidator
 
     @_setErrorMessage input, @errorMessages
 
-    if false in validationResults then return false else return true
+    if false in validationResults
+      return false
+    else
+      input.setAttribute 'data-error-message', ''
+      return true
 
   defineCustomValidation: (name, regex, errorMessage) ->
     @validations[name] = {}

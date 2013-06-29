@@ -105,6 +105,7 @@
       if (__indexOf.call(validationResults, false) >= 0) {
         return false;
       } else {
+        input.setAttribute('data-error-message', '');
         return true;
       }
     };

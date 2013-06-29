@@ -202,6 +202,12 @@ describe 'Validator', ->
         validator.validateInput node
         expect( node.dataset.errorMessage ).toBe 'Foo'
 
+      it 'removes the error messages if the input becomes valid', ->
+        node = sandbox '<input data-validation="format:[email]" value="foobar" type="email">'
+        validator.validateInput node
+        node.setAttribute 'value', 'david.pdrsn@gmail.com'
+        validator.validateInput node
+        expect( node.dataset.errorMessage ).toBe ''
 
   describe '#validateForm', ->
     it 'returns true if all the inputs with validation within the form are valid', ->

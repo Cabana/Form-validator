@@ -296,12 +296,21 @@
             return expect(node.dataset.errorMessage).toBe('Foo');
           });
         });
-        return it('does not override error messages defined on the input element to begin with', function() {
+        it('does not override error messages defined on the input element to begin with', function() {
           var node;
 
           node = sandbox('<input data-validation="format:[tel]" data-error-message="Foo" value="foobar" type="email">');
           validator.validateInput(node);
           return expect(node.dataset.errorMessage).toBe('Foo');
+        });
+        return it('removes the error messages if the input becomes valid', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[email]" value="foobar" type="email">');
+          validator.validateInput(node);
+          node.setAttribute('value', 'david.pdrsn@gmail.com');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('');
         });
       });
     });
