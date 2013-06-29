@@ -7,7 +7,7 @@ describe 'Validator', ->
   describe '#defineCustomValidation', ->
     it 'defines a new validation format', ->
       validator.defineCustomValidation 'cpr', "/\\d{6}-\\d{4}/", 'Foo'
-      expect( validator.validations.cpr ).toEqual { regex: "/\\d{6}-\\d{4}/", errorMessage: 'Foo' }
+      expect( validator._validations.cpr ).toEqual { regex: "/\\d{6}-\\d{4}/", errorMessage: 'Foo' }
 
   describe '#validateInput', ->
     describe 'format validation', ->
@@ -197,10 +197,18 @@ describe 'Validator', ->
           validator.validateInput node
           expect( node.dataset.errorMessage ).toBe 'Foo'
 
-      it 'does not override error messages defined on the input element to begin with', ->
-        node = sandbox '<input data-validation="format:[tel]" data-error-message="Foo" value="foobar" type="email">'
+        it 'has a default', ->
+          validator.defineCustomValidation 'cpr', "/\\d{6}-\\d{4}/"
+          node = sandbox '<input data-validation="format:[cpr]" value="foobar" type="email">'
+          validator.validateInput node
+          expect( node.dataset.errorMessage ).toBe 'Field is invalid'
+
+      it 'changes the error message if it has to', ->
+        node = sandbox '<input data-validation="format:[email], required:true" value="" type="email">'
         validator.validateInput node
-        expect( node.dataset.errorMessage ).toBe 'Foo'
+        node.setAttribute 'value', 'invalid email'
+        validator.validateInput node
+        expect( node.dataset.errorMessage ).toBe 'Email is invalid'
 
       it 'removes the error messages if the input becomes valid', ->
         node = sandbox '<input data-validation="format:[email]" value="foobar" type="email">'

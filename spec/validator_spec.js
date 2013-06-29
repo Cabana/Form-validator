@@ -10,7 +10,7 @@
     describe('#defineCustomValidation', function() {
       return it('defines a new validation format', function() {
         validator.defineCustomValidation('cpr', "/\\d{6}-\\d{4}/", 'Foo');
-        return expect(validator.validations.cpr).toEqual({
+        return expect(validator._validations.cpr).toEqual({
           regex: "/\\d{6}-\\d{4}/",
           errorMessage: 'Foo'
         });
@@ -287,7 +287,7 @@
           return expect(node.dataset.errorMessage).toBe('Telephone number is invalid');
         });
         describe('custom error messages', function() {
-          return it('also works with those', function() {
+          it('also works with those', function() {
             var node;
 
             validator.defineCustomValidation('cpr', "/\\d{6}-\\d{4}/", 'Foo');
@@ -295,13 +295,23 @@
             validator.validateInput(node);
             return expect(node.dataset.errorMessage).toBe('Foo');
           });
+          return it('has a default', function() {
+            var node;
+
+            validator.defineCustomValidation('cpr', "/\\d{6}-\\d{4}/");
+            node = sandbox('<input data-validation="format:[cpr]" value="foobar" type="email">');
+            validator.validateInput(node);
+            return expect(node.dataset.errorMessage).toBe('Field is invalid');
+          });
         });
-        it('does not override error messages defined on the input element to begin with', function() {
+        it('changes the error message if it has to', function() {
           var node;
 
-          node = sandbox('<input data-validation="format:[tel]" data-error-message="Foo" value="foobar" type="email">');
+          node = sandbox('<input data-validation="format:[email], required:true" value="" type="email">');
           validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('Foo');
+          node.setAttribute('value', 'invalid email');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('Email is invalid');
         });
         return it('removes the error messages if the input becomes valid', function() {
           var node;

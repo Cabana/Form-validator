@@ -25,11 +25,10 @@
 - [ ] Error messages for depends on checkbox
 - [ ] Error messages for groups
 - [x] Error messages required
-- [ ] Refactor error messages for non format validations
+- [x] Refactor error messages for non format validations
 - [ ] Change error messages for built in validations
 - [ ] Danish error messages
-- [x] Don't override error messages already defined
-- [ ] Default error message for custom defined format validations
+- [x] Default error message for custom defined format validations
 
 ## jQuery plugin
 
