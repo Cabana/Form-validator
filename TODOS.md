@@ -12,21 +12,24 @@
 - [ ] Validations for exact value
 - [ ] Validation depends on checkbox
 - [ ] Validation groups
-- [ ] Refactor required so its no longer a format validation
+- [x] Refactor required so its no longer a format validation
+- [x] Refactor .validateInput() to be less complex
 
 ## Error messages
 
 - [x] Error messages for default validation formats
 - [x] Error messages for length
-- [ ] Error messages for word count
+- [x] Error messages for word count
 - [x] Error messages for custom validation formats
 - [ ] Error messages for exact value
 - [ ] Error messages for depends on checkbox
 - [ ] Error messages for groups
+- [x] Error messages required
 - [ ] Refactor error messages for non format validations
-- [ ] Define error messages for built in validations
+- [ ] Change error messages for built in validations
 - [ ] Danish error messages
-- [ ] Don't override error messages already defined
+- [x] Don't override error messages already defined
+- [ ] Default error message for custom defined format validations
 
 ## jQuery plugin
 

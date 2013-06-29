@@ -1,5 +1,5 @@
 describe 'Validator', ->
-  validator = new Object
+  validator = ''
 
   beforeEach ->
     validator = new FormValidator
@@ -37,11 +37,11 @@ describe 'Validator', ->
 
     describe 'required validation', ->
       it 'returns true if the input has a value', ->
-        node = sandbox '<input data-validation="format:[required]" value="some value" type="email">'
+        node = sandbox '<input data-validation="required:true" value="some value" type="email">'
         expect( validator.validateInput node ).toBe true
 
       it 'returns false if the input does not have a value', ->
-        node = sandbox '<input data-validation="format:[required]" value="" type="email">'
+        node = sandbox '<input data-validation="required:true" value="" type="email">'
         expect( validator.validateInput node ).toBe false
 
     describe 'length validation', ->
@@ -155,6 +155,31 @@ describe 'Validator', ->
             validator.validateInput node
             expect( node.dataset.errorMessage ).toBe "Value can't be longer than 3"
 
+      describe 'with word count validation', ->
+        describe 'both min and max', ->
+          it 'sets the error message correctly', ->
+            node = sandbox '<input data-validation="wordCount:[min:2, max:5]" value="f" type="email">'
+            validator.validateInput node
+            expect( node.dataset.errorMessage ).toBe "Can't contain less than 2 or more than 5 words"
+
+        describe 'only min', ->
+          it 'sets the error message correctly', ->
+            node = sandbox '<input data-validation="wordCount:[min:2]" value="f" type="email">'
+            validator.validateInput node
+            expect( node.dataset.errorMessage ).toBe "Can't contain less than 2 words"
+
+        describe 'only max', ->
+          it 'sets the error message correctly', ->
+            node = sandbox '<input data-validation="wordCount:[max:2]" value="foo bar foo" type="email">'
+            validator.validateInput node
+            expect( node.dataset.errorMessage ).toBe "Can't contain more than 2 words"
+
+      describe 'with required validation', ->
+        it 'sets the error message correctly', ->
+          node = sandbox '<input data-validation="required:true" value="" type="email">'
+          validator.validateInput node
+          expect( node.dataset.errorMessage ).toBe "Can't be blank"
+
       it 'sets multiple error messages with the correct format', ->
         node = sandbox '<input data-validation="format:[tel], length:[min:3]" value="f" type="email">'
         validator.validateInput node
@@ -171,6 +196,12 @@ describe 'Validator', ->
           node = sandbox '<input data-validation="format:[cpr]" value="foobar" type="email">'
           validator.validateInput node
           expect( node.dataset.errorMessage ).toBe 'Foo'
+
+      it 'does not override error messages defined on the input element to begin with', ->
+        node = sandbox '<input data-validation="format:[tel]" data-error-message="Foo" value="foobar" type="email">'
+        validator.validateInput node
+        expect( node.dataset.errorMessage ).toBe 'Foo'
+
 
   describe '#validateForm', ->
     it 'returns true if all the inputs with validation within the form are valid', ->

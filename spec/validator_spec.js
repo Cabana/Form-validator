@@ -3,7 +3,7 @@
   describe('Validator', function() {
     var validator;
 
-    validator = new Object;
+    validator = '';
     beforeEach(function() {
       return validator = new FormValidator;
     });
@@ -60,13 +60,13 @@
         it('returns true if the input has a value', function() {
           var node;
 
-          node = sandbox('<input data-validation="format:[required]" value="some value" type="email">');
+          node = sandbox('<input data-validation="required:true" value="some value" type="email">');
           return expect(validator.validateInput(node)).toBe(true);
         });
         return it('returns false if the input does not have a value', function() {
           var node;
 
-          node = sandbox('<input data-validation="format:[required]" value="" type="email">');
+          node = sandbox('<input data-validation="required:true" value="" type="email">');
           return expect(validator.validateInput(node)).toBe(false);
         });
       });
@@ -234,6 +234,44 @@
             });
           });
         });
+        describe('with word count validation', function() {
+          describe('both min and max', function() {
+            return it('sets the error message correctly', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:2, max:5]" value="f" type="email">');
+              validator.validateInput(node);
+              return expect(node.dataset.errorMessage).toBe("Can't contain less than 2 or more than 5 words");
+            });
+          });
+          describe('only min', function() {
+            return it('sets the error message correctly', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:2]" value="f" type="email">');
+              validator.validateInput(node);
+              return expect(node.dataset.errorMessage).toBe("Can't contain less than 2 words");
+            });
+          });
+          return describe('only max', function() {
+            return it('sets the error message correctly', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[max:2]" value="foo bar foo" type="email">');
+              validator.validateInput(node);
+              return expect(node.dataset.errorMessage).toBe("Can't contain more than 2 words");
+            });
+          });
+        });
+        describe('with required validation', function() {
+          return it('sets the error message correctly', function() {
+            var node;
+
+            node = sandbox('<input data-validation="required:true" value="" type="email">');
+            validator.validateInput(node);
+            return expect(node.dataset.errorMessage).toBe("Can't be blank");
+          });
+        });
         it('sets multiple error messages with the correct format', function() {
           var node;
 
@@ -248,7 +286,7 @@
           validator.validateInput(node);
           return expect(node.dataset.errorMessage).toBe('Telephone number is invalid');
         });
-        return describe('custom error messages', function() {
+        describe('custom error messages', function() {
           return it('also works with those', function() {
             var node;
 
@@ -257,6 +295,13 @@
             validator.validateInput(node);
             return expect(node.dataset.errorMessage).toBe('Foo');
           });
+        });
+        return it('does not override error messages defined on the input element to begin with', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[tel]" data-error-message="Foo" value="foobar" type="email">');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('Foo');
         });
       });
     });

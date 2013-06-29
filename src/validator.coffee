@@ -27,72 +27,51 @@ class @FormValidator
     @parser = new Parser regexes
 
   validations:
-    email: {
+    email:
       regex: '.+@.+\\..+',
       errorMessage: 'Email is invalid'
-    },
-    tel: {
+    tel:
       regex: '\\d{8}',
       errorMessage: 'Telephone number is invalid'
-    },
-    required: {
-      regex: '.+',
-      errorMessage: 'Can\'t be blank'
-    }
+    length:
+      errorMessage: (min, max) ->
+        if max && min
+          "Value most be at least #{min} and maximum #{max} characters long"
+        else if min
+          "Value most be at least #{min}"
+        else if max
+          "Value can't be longer than #{max}"
+    wordCount:
+      errorMessage: (min, max) ->
+        if max && min
+          "Can't contain less than #{min} or more than #{max} words"
+        else if min
+          "Can't contain less than #{min} words"
+        else if max
+          "Can't contain more than #{max} words"
+
+  errorMessages: []
 
   validateInput: (input) ->
+    @errorMessages = []
     value = input.value
-    validationObject = @_generateValidationObject input.dataset.validation
+    validations = @_generateValidations input.dataset.validation
+    validationResults = []
 
-    format = validationObject.format || {}
-    length = validationObject.length || {}
-    wordCount = validationObject.wordCount || {}
+    validationResults.push @_validateFormat value, validations.format if validations.format
+    validationResults.push @_validateLength value, validations.length if validations.length
+    validationResults.push @_validateWordCount value, validations.wordCount if validations.wordCount
 
-    errorMessages = []
-    isValid = []
+    if validations.required && value == ''
+      @errorMessages.push "Can't be blank"
+      validationResults.push false
 
-    # Validate format (regex pattern)
-    Object.keys(format).forEach (key) =>
-      regex = new RegExp format[key]
-      validationResult = regex.test value
-      errorMessages.push @validations[key].errorMessage if validationResult == false
-      isValid.push validationResult
+    if validations.allowEmpty && value == ''
+      validationResults = [true]
 
-    # Validate length
-    if length.max && length.min
-      validationResult = value.length in [length.min..length.max]
-      errorMessages.push "Value most be at least #{length.min} and maximum #{length.max} characters long" if validationResult == false
-      isValid.push validationResult
-    else if length.min
-      validationResult = value.length >= length.min
-      errorMessages.push "Value most be at least #{length.min}" if validationResult == false
-      isValid.push validationResult
-    else if length.max
-      validationResult = value.length <= length.max
-      errorMessages.push "Value can't be longer than #{length.max}" if validationResult == false
-      isValid.push validationResult
+    @_setErrorMessage input, @errorMessages
 
-    # Validate wordCount
-    Object.keys(wordCount).forEach (key) ->
-      min = wordCount.min
-      max = wordCount.max
-      regex = /[ ]+/
-      if min && max
-        isValid.push value.split(regex).length in [min..max]
-      else if min
-        isValid.push value.split(regex).length >= min
-      else if max
-        isValid.push value.split(regex).length <= max
-
-    if value == '' && validationObject.allowEmpty
-      isValid = [true]
-
-    @_setErrorMessage input, errorMessages
-
-    if false in isValid
-      false
-    else
-      true
+    if false in validationResults then return false else return true
 
   defineCustomValidation: (name, regex, errorMessage) ->
     @validations[name] = {}
@@ -103,16 +82,60 @@ class @FormValidator
   validateForm: (form) ->
     validationResults = []
 
-    for input in form.querySelectorAll('input[data-validation], textarea[data-validation]')
-      validationResults.push @.validateInput input
+    for input in form.querySelectorAll '[data-validation]'
+      validationResults.push @validateInput input
 
-    if false in validationResults
-      false
-    else
-      true
+    if false in validationResults then return false else return true
 
   _setErrorMessage: (input, messages) ->
+    messages = [input.dataset.errorMessage] if input.dataset.errorMessage
     input.setAttribute 'data-error-message', toSentence(messages).toLowerCase().capitalize()
 
-  _generateValidationObject: (string) ->
+  _generateValidations: (string) ->
     @parser.parse string
+
+  _validateFormat: (value, format = {}) ->
+    validationResults = []
+
+    Object.keys(format).forEach (key) =>
+      regex = new RegExp format[key]
+      valid = regex.test value
+      @errorMessages.push @validations[key].errorMessage unless valid
+      validationResults.push valid
+
+    if false in validationResults then return false else return true
+
+  _validateLength: (value, lengths = {}) ->
+    validationResults = []
+
+    max = lengths.max
+    min = lengths.min
+
+    if max && min
+      valid = value.length in [min..max]
+    else if min
+      valid = value.length >= min
+    else if max
+      valid = value.length <= max
+
+    validationResults.push valid
+    @errorMessages.push @validations.length.errorMessage min, max unless valid
+    if false in validationResults then return false else return true
+
+  _validateWordCount: (value, lengths = {}) ->
+    validationResults = []
+
+    max = lengths.max
+    min = lengths.min
+
+    wordCountRegex = /[ ]+/
+    if max && min
+      valid = value.split(wordCountRegex).length in [min..max]
+    else if min
+      valid = value.split(wordCountRegex).length >= min
+    else if max
+      valid = value.split(wordCountRegex).length <= max
+
+    validationResults.push valid
+    @errorMessages.push @validations.wordCount.errorMessage min, max unless valid
+    if false in validationResults then return false else return true

@@ -52,79 +52,57 @@
         regex: '\\d{8}',
         errorMessage: 'Telephone number is invalid'
       },
-      required: {
-        regex: '.+',
-        errorMessage: 'Can\'t be blank'
+      length: {
+        errorMessage: function(min, max) {
+          if (max && min) {
+            return "Value most be at least " + min + " and maximum " + max + " characters long";
+          } else if (min) {
+            return "Value most be at least " + min;
+          } else if (max) {
+            return "Value can't be longer than " + max;
+          }
+        }
+      },
+      wordCount: {
+        errorMessage: function(min, max) {
+          if (max && min) {
+            return "Can't contain less than " + min + " or more than " + max + " words";
+          } else if (min) {
+            return "Can't contain less than " + min + " words";
+          } else if (max) {
+            return "Can't contain more than " + max + " words";
+          }
+        }
       }
     };
 
+    FormValidator.prototype.errorMessages = [];
+
     FormValidator.prototype.validateInput = function(input) {
-      var errorMessages, format, isValid, length, validationObject, validationResult, value, wordCount, _i, _ref, _ref1, _ref2, _results,
-        _this = this;
+      var validationResults, validations, value;
 
+      this.errorMessages = [];
       value = input.value;
-      validationObject = this._generateValidationObject(input.dataset.validation);
-      format = validationObject.format || {};
-      length = validationObject.length || {};
-      wordCount = validationObject.wordCount || {};
-      errorMessages = [];
-      isValid = [];
-      Object.keys(format).forEach(function(key) {
-        var regex, validationResult;
-
-        regex = new RegExp(format[key]);
-        validationResult = regex.test(value);
-        if (validationResult === false) {
-          errorMessages.push(_this.validations[key].errorMessage);
-        }
-        return isValid.push(validationResult);
-      });
-      if (length.max && length.min) {
-        validationResult = (_ref = value.length, __indexOf.call((function() {
-          _results = [];
-          for (var _i = _ref1 = length.min, _ref2 = length.max; _ref1 <= _ref2 ? _i <= _ref2 : _i >= _ref2; _ref1 <= _ref2 ? _i++ : _i--){ _results.push(_i); }
-          return _results;
-        }).apply(this), _ref) >= 0);
-        if (validationResult === false) {
-          errorMessages.push("Value most be at least " + length.min + " and maximum " + length.max + " characters long");
-        }
-        isValid.push(validationResult);
-      } else if (length.min) {
-        validationResult = value.length >= length.min;
-        if (validationResult === false) {
-          errorMessages.push("Value most be at least " + length.min);
-        }
-        isValid.push(validationResult);
-      } else if (length.max) {
-        validationResult = value.length <= length.max;
-        if (validationResult === false) {
-          errorMessages.push("Value can't be longer than " + length.max);
-        }
-        isValid.push(validationResult);
+      validations = this._generateValidations(input.dataset.validation);
+      validationResults = [];
+      if (validations.format) {
+        validationResults.push(this._validateFormat(value, validations.format));
       }
-      Object.keys(wordCount).forEach(function(key) {
-        var max, min, regex, _j, _ref3, _results1;
-
-        min = wordCount.min;
-        max = wordCount.max;
-        regex = /[ ]+/;
-        if (min && max) {
-          return isValid.push((_ref3 = value.split(regex).length, __indexOf.call((function() {
-            _results1 = [];
-            for (var _j = min; min <= max ? _j <= max : _j >= max; min <= max ? _j++ : _j--){ _results1.push(_j); }
-            return _results1;
-          }).apply(this), _ref3) >= 0));
-        } else if (min) {
-          return isValid.push(value.split(regex).length >= min);
-        } else if (max) {
-          return isValid.push(value.split(regex).length <= max);
-        }
-      });
-      if (value === '' && validationObject.allowEmpty) {
-        isValid = [true];
+      if (validations.length) {
+        validationResults.push(this._validateLength(value, validations.length));
       }
-      this._setErrorMessage(input, errorMessages);
-      if (__indexOf.call(isValid, false) >= 0) {
+      if (validations.wordCount) {
+        validationResults.push(this._validateWordCount(value, validations.wordCount));
+      }
+      if (validations.required && value === '') {
+        this.errorMessages.push("Can't be blank");
+        validationResults.push(false);
+      }
+      if (validations.allowEmpty && value === '') {
+        validationResults = [true];
+      }
+      this._setErrorMessage(input, this.errorMessages);
+      if (__indexOf.call(validationResults, false) >= 0) {
         return false;
       } else {
         return true;
@@ -142,7 +120,7 @@
       var input, validationResults, _i, _len, _ref;
 
       validationResults = [];
-      _ref = form.querySelectorAll('input[data-validation], textarea[data-validation]');
+      _ref = form.querySelectorAll('[data-validation]');
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         input = _ref[_i];
         validationResults.push(this.validateInput(input));
@@ -155,11 +133,102 @@
     };
 
     FormValidator.prototype._setErrorMessage = function(input, messages) {
+      if (input.dataset.errorMessage) {
+        messages = [input.dataset.errorMessage];
+      }
       return input.setAttribute('data-error-message', toSentence(messages).toLowerCase().capitalize());
     };
 
-    FormValidator.prototype._generateValidationObject = function(string) {
+    FormValidator.prototype._generateValidations = function(string) {
       return this.parser.parse(string);
+    };
+
+    FormValidator.prototype._validateFormat = function(value, format) {
+      var validationResults,
+        _this = this;
+
+      if (format == null) {
+        format = {};
+      }
+      validationResults = [];
+      Object.keys(format).forEach(function(key) {
+        var regex, valid;
+
+        regex = new RegExp(format[key]);
+        valid = regex.test(value);
+        if (!valid) {
+          _this.errorMessages.push(_this.validations[key].errorMessage);
+        }
+        return validationResults.push(valid);
+      });
+      if (__indexOf.call(validationResults, false) >= 0) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    FormValidator.prototype._validateLength = function(value, lengths) {
+      var max, min, valid, validationResults, _i, _ref, _results;
+
+      if (lengths == null) {
+        lengths = {};
+      }
+      validationResults = [];
+      max = lengths.max;
+      min = lengths.min;
+      if (max && min) {
+        valid = (_ref = value.length, __indexOf.call((function() {
+          _results = [];
+          for (var _i = min; min <= max ? _i <= max : _i >= max; min <= max ? _i++ : _i--){ _results.push(_i); }
+          return _results;
+        }).apply(this), _ref) >= 0);
+      } else if (min) {
+        valid = value.length >= min;
+      } else if (max) {
+        valid = value.length <= max;
+      }
+      validationResults.push(valid);
+      if (!valid) {
+        this.errorMessages.push(this.validations.length.errorMessage(min, max));
+      }
+      if (__indexOf.call(validationResults, false) >= 0) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    FormValidator.prototype._validateWordCount = function(value, lengths) {
+      var max, min, valid, validationResults, wordCountRegex, _i, _ref, _results;
+
+      if (lengths == null) {
+        lengths = {};
+      }
+      validationResults = [];
+      max = lengths.max;
+      min = lengths.min;
+      wordCountRegex = /[ ]+/;
+      if (max && min) {
+        valid = (_ref = value.split(wordCountRegex).length, __indexOf.call((function() {
+          _results = [];
+          for (var _i = min; min <= max ? _i <= max : _i >= max; min <= max ? _i++ : _i--){ _results.push(_i); }
+          return _results;
+        }).apply(this), _ref) >= 0);
+      } else if (min) {
+        valid = value.split(wordCountRegex).length >= min;
+      } else if (max) {
+        valid = value.split(wordCountRegex).length <= max;
+      }
+      validationResults.push(valid);
+      if (!valid) {
+        this.errorMessages.push(this.validations.wordCount.errorMessage(min, max));
+      }
+      if (__indexOf.call(validationResults, false) >= 0) {
+        return false;
+      } else {
+        return true;
+      }
     };
 
     return FormValidator;
