@@ -24,6 +24,7 @@
 - [ ] Error messages for depends on checkbox
 - [ ] Error messages for groups
 - [ ] Refactor error messages for non format validations
+- [ ] Define error messages for built in validations
 - [ ] Danish error messages
 - [ ] Don't override error messages already defined
 
