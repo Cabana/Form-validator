@@ -33,14 +33,18 @@
       var options = that.options;
       var validator = options.validator;
 
+      element.setAttribute('novalidate', 'true');
+
       $(element).on('submit', function(e){
 
         if ( validator.validateForm(element) ) {
           // valid
           e.preventDefault();
+          console.log('valid');
         } else {
           // invalid
           e.preventDefault();
+          console.log('invalid');
         }
 
         that.setErrorClasses(element, options);

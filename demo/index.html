@@ -24,7 +24,7 @@
   </head>
   <body>
 
-    <form action="#">
+    <form action="javascript:void();">
 
       <div class="field">
         <label>First name(s):</label>
@@ -33,7 +33,7 @@
 
       <div class="field">
         <label>Last name:</label>
-        <input data-validation="wordCount:[max:1]" type="text">
+        <input data-validation="wordCount:[min:1, max:1]" type="text">
       </div>
 
       <div class="field">
@@ -42,13 +42,18 @@
       </div>
 
       <div class="field">
+        <label>Password:</label>
+        <input data-validation="length:[min:3]" type="text">
+      </div>
+
+      <div class="field">
         <label>CPR:</label>
         <input data-validation="format:[cpr]" type="text">
       </div>
 
       <div class="field">
-        <label>Password:</label>
-        <input data-validation="length:[min:3]" type="password">
+        <label>Rating:</label>
+        <input data-validation="format:[number]" type="text">
       </div>
 
       <div class="actions">
