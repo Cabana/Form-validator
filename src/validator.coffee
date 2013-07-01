@@ -105,7 +105,11 @@ class @FormValidator
   _setErrorMessage: (input, messages) ->
     @_resetErrorMessage input
     messages = [input.dataset.errorMessage] if input.dataset.errorMessage
-    input.setAttribute 'data-error-message', toSentence(messages).toLowerCase().capitalize()
+    fullMessage = toSentence(messages).toLowerCase().capitalize()
+    if fullMessage == ''
+      input.removeAttribute 'data-error-message'
+    else
+      input.setAttribute 'data-error-message', fullMessage
 
   _resetErrorMessage: (input) ->
     input.setAttribute 'data-error-message', ''

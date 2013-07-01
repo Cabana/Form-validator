@@ -15,6 +15,7 @@
 - [x] Refactor required so its no longer a format validation
 - [x] Refactor .validateInput() to be less complex
 - [ ] Refactor tests of validation depends to not use jQuery to setup the dom
+- [x] Remove data-error-message if there is no error message
 
 ## Error messages
 

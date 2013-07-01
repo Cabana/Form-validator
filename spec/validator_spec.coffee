@@ -200,7 +200,7 @@ describe 'Validator', ->
         validator.validateInput node
         node.setAttribute 'value', 'david.pdrsn@gmail.com'
         validator.validateInput node
-        expect( node.dataset.errorMessage ).toBe ''
+        expect( node.dataset.errorMessage ).toBe undefined
 
       it 'sets multiple error messages with the correct format', ->
         node = sandbox '<input data-validation="format:[tel], length:[min:3]" value="f" type="email">'
@@ -260,7 +260,7 @@ describe 'Validator', ->
         it 'does not set an error message when allow empty is true and field is empty', ->
           node = sandbox '<input data-validation="format:[email], allowEmpty" value="" type="email">'
           validator.validateInput node
-          expect( node.dataset.errorMessage ).toBe ''
+          expect( node.dataset.errorMessage ).toBe undefined
 
       describe 'with validation depends on', ->
         it 'does not set an error message when checkbox is unchecked and field is invalid', ->
@@ -274,7 +274,7 @@ describe 'Validator', ->
           $('body').append html
           input = $('#input')[0]
           validator.validateInput input
-          expect( input.dataset.errorMessage ).toBe ''
+          expect( input.dataset.errorMessage ).toBe undefined
           $('#sandbox').remove()
 
       describe 'custom error messages', ->

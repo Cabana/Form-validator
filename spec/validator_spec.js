@@ -262,7 +262,7 @@
           validator.validateInput(node);
           node.setAttribute('value', 'david.pdrsn@gmail.com');
           validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('');
+          return expect(node.dataset.errorMessage).toBe(void 0);
         });
         it('sets multiple error messages with the correct format', function() {
           var node;
@@ -351,7 +351,7 @@
 
             node = sandbox('<input data-validation="format:[email], allowEmpty" value="" type="email">');
             validator.validateInput(node);
-            return expect(node.dataset.errorMessage).toBe('');
+            return expect(node.dataset.errorMessage).toBe(void 0);
           });
         });
         describe('with validation depends on', function() {
@@ -363,7 +363,7 @@
             $('body').append(html);
             input = $('#input')[0];
             validator.validateInput(input);
-            expect(input.dataset.errorMessage).toBe('');
+            expect(input.dataset.errorMessage).toBe(void 0);
             return $('#sandbox').remove();
           });
         });

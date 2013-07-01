@@ -153,11 +153,18 @@
     FormValidator.prototype._errorMessages = [];
 
     FormValidator.prototype._setErrorMessage = function(input, messages) {
+      var fullMessage;
+
       this._resetErrorMessage(input);
       if (input.dataset.errorMessage) {
         messages = [input.dataset.errorMessage];
       }
-      return input.setAttribute('data-error-message', toSentence(messages).toLowerCase().capitalize());
+      fullMessage = toSentence(messages).toLowerCase().capitalize();
+      if (fullMessage === '') {
+        return input.removeAttribute('data-error-message');
+      } else {
+        return input.setAttribute('data-error-message', fullMessage);
+      }
     };
 
     FormValidator.prototype._resetErrorMessage = function(input) {
