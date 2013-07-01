@@ -6,8 +6,8 @@ describe 'Validator', ->
 
   describe '#defineCustomValidation', ->
     it 'defines a new validation format', ->
-      validator.defineCustomValidation 'cpr', "/\\d{6}-\\d{4}/", 'Foo'
-      expect( validator._validations.cpr ).toEqual { regex: "/\\d{6}-\\d{4}/", errorMessage: 'Foo' }
+      validator.defineCustomValidation 'cpr', "\\d{6}-\\d{4}", 'Foo'
+      expect( validator._validations.cpr ).toEqual { regex: "\\d{6}-\\d{4}", errorMessage: 'Foo' }
 
   describe '#validateInput', ->
     describe 'format validation', ->

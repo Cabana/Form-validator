@@ -9,9 +9,9 @@
     });
     describe('#defineCustomValidation', function() {
       return it('defines a new validation format', function() {
-        validator.defineCustomValidation('cpr', "/\\d{6}-\\d{4}/", 'Foo');
+        validator.defineCustomValidation('cpr', "\\d{6}-\\d{4}", 'Foo');
         return expect(validator._validations.cpr).toEqual({
-          regex: "/\\d{6}-\\d{4}/",
+          regex: "\\d{6}-\\d{4}",
           errorMessage: 'Foo'
         });
       });
