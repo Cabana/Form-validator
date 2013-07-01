@@ -32,7 +32,7 @@
 
   this.FormValidator = (function() {
     function FormValidator() {
-      var key, regexes, _i, _len, _ref;
+      var key, parser, regexes, _i, _len, _ref;
 
       regexes = {};
       _ref = Object.keys(this._validations);
@@ -40,11 +40,14 @@
         key = _ref[_i];
         regexes[key] = this._validations[key].regex;
       }
-      this.parser = new Parser(regexes);
+      parser = new Parser(regexes);
+      parser.addDefaultValue('required', true);
+      parser.addDefaultValue('allowEmpty', true);
+      this.parser = parser;
     }
 
     FormValidator.prototype.validateInput = function(input) {
-      var validationResults, validations, value;
+      var checked, validationResults, validations, value;
 
       this._errorMessages = [];
       value = input.value;
@@ -64,7 +67,15 @@
         validationResults.push(false);
       }
       if (validations.allowEmpty && value === '') {
+        this._errorMessages = [];
         validationResults = [true];
+      }
+      if (validations.dependsOn) {
+        checked = document.getElementById(validations.dependsOn).checked;
+        if (!checked) {
+          this._errorMessages = [];
+          validationResults = [true];
+        }
       }
       this._setErrorMessage(input, this._errorMessages);
       if (__indexOf.call(validationResults, false) >= 0) {
@@ -234,7 +245,3 @@
   })();
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=validator.map
-*/

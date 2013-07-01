@@ -10,10 +10,11 @@
 - [x] Validations for word count
 - [x] Validations for allow empty
 - [ ] Validations for exact value
-- [ ] Validation depends on checkbox
+- [x] Validation depends on checkbox
 - [ ] Validation groups
 - [x] Refactor required so its no longer a format validation
 - [x] Refactor .validateInput() to be less complex
+- [ ] Refactor tests of validation depends to not use jQuery to setup the dom
 
 ## Error messages
 
@@ -22,7 +23,8 @@
 - [x] Error messages for word count
 - [x] Error messages for custom validation formats
 - [ ] Error messages for exact value
-- [ ] Error messages for depends on checkbox
+- [x] Error messages for allow empty
+- [x] Error messages for depends on checkbox
 - [ ] Error messages for groups
 - [x] Error messages required
 - [x] Refactor error messages for non format validations

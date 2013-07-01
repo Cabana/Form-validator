@@ -60,13 +60,13 @@
         it('returns true if the input has a value', function() {
           var node;
 
-          node = sandbox('<input data-validation="required:true" value="some value" type="email">');
+          node = sandbox('<input data-validation="required" value="some value" type="email">');
           return expect(validator.validateInput(node)).toBe(true);
         });
         return it('returns false if the input does not have a value', function() {
           var node;
 
-          node = sandbox('<input data-validation="required:true" value="" type="email">');
+          node = sandbox('<input data-validation="required" value="" type="email">');
           return expect(validator.validateInput(node)).toBe(false);
         });
       });
@@ -143,16 +143,16 @@
         });
       });
       describe('allow empty', function() {
-        it('returns true if the input is empty even though it has a format validation', function() {
+        it('returns true if the input is invalid even though it has a format validation', function() {
           var node;
 
-          node = sandbox('<input data-validation="format:[email], allowEmpty:true" value="" type="email">');
+          node = sandbox('<input data-validation="format:[email], allowEmpty" value="" type="email">');
           return expect(validator.validateInput(node)).toBe(true);
         });
         return it('returns false if the input contains an invalid value', function() {
           var node;
 
-          node = sandbox('<input data-validation="format:[email], allowEmpty:true" value="invalid emai" type="email">');
+          node = sandbox('<input data-validation="format:[email], allowEmpty" value="invalid emai" type="email">');
           return expect(validator.validateInput(node)).toBe(false);
         });
       });
@@ -190,6 +190,47 @@
           });
         });
       });
+      describe('validation depends on', function() {
+        afterEach(function() {
+          return $('#sandbox').remove();
+        });
+        it('returns true if the checkbox is checked and the input is valid', function() {
+          var html, input, nodes;
+
+          html = "<div id=\"sandbox\">\n  <input type=\"checkbox\" id=\"checkbox\" checked>\n  <input data-validation=\"format:[email], dependsOn:checkbox\" value=\"david@gmail.com\" id=\"input\" type=\"email\">\n</div>";
+          nodes = sandbox(html);
+          $('body').append(html);
+          input = $('#input')[0];
+          return expect(validator.validateInput(input)).toBe(true);
+        });
+        it('returns true if the checkbox is not checked and the input is valid', function() {
+          var html, input, nodes;
+
+          html = "<div id=\"sandbox\">\n  <input type=\"checkbox\" id=\"checkbox\">\n  <input data-validation=\"format:[email], dependsOn:checkbox\" value=\"david@gmail.com\" id=\"input\" type=\"email\">\n</div>";
+          nodes = sandbox(html);
+          $('body').append(html);
+          input = $('#input')[0];
+          return expect(validator.validateInput(input)).toBe(true);
+        });
+        it('returns true if the checkbox is not checked and the input is invalid', function() {
+          var html, input, nodes;
+
+          html = "<div id=\"sandbox\">\n  <input type=\"checkbox\" id=\"checkbox\">\n  <input data-validation=\"format:[email], dependsOn:checkbox\" value=\"invalid email\" id=\"input\" type=\"email\">\n</div>";
+          nodes = sandbox(html);
+          $('body').append(html);
+          input = $('#input')[0];
+          return expect(validator.validateInput(input)).toBe(true);
+        });
+        return it('returns false if the checkbox is checked and the input is invalid', function() {
+          var html, input, nodes;
+
+          html = "<div id=\"sandbox\">\n  <input type=\"checkbox\" id=\"checkbox\" checked>\n  <input data-validation=\"format:[email], dependsOn:checkbox\" value=\"invalid email\" id=\"input\" type=\"email\">\n</div>";
+          nodes = sandbox(html);
+          $('body').append(html);
+          input = $('#input')[0];
+          return expect(validator.validateInput(input)).toBe(false);
+        });
+      });
       return describe('setting error messages', function() {
         it('sets the error message on an input with email validation', function() {
           var node;
@@ -202,6 +243,38 @@
           var node;
 
           node = sandbox('<input data-validation="format:[tel]" value="aksjdf" type="email">');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('Telephone number is invalid');
+        });
+        it('changes the error message if it has to', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[email], required:true" value="" type="email">');
+          validator.validateInput(node);
+          node.setAttribute('value', 'invalid email');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('Email is invalid');
+        });
+        it('removes the error messages if the input becomes valid', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[email]" value="foobar" type="email">');
+          validator.validateInput(node);
+          node.setAttribute('value', 'david.pdrsn@gmail.com');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('');
+        });
+        it('sets multiple error messages with the correct format', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[tel], length:[min:3]" value="f" type="email">');
+          validator.validateInput(node);
+          return expect(node.dataset.errorMessage).toBe('Telephone number is invalid and value most be at least 3');
+        });
+        it('adds the correct error messages', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[tel], length:[min:3]" value="foobar" type="email">');
           validator.validateInput(node);
           return expect(node.dataset.errorMessage).toBe('Telephone number is invalid');
         });
@@ -272,21 +345,29 @@
             return expect(node.dataset.errorMessage).toBe("Can't be blank");
           });
         });
-        it('sets multiple error messages with the correct format', function() {
-          var node;
+        describe('with allow empty validation', function() {
+          return it('does not set an error message when allow empty is true and field is empty', function() {
+            var node;
 
-          node = sandbox('<input data-validation="format:[tel], length:[min:3]" value="f" type="email">');
-          validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('Telephone number is invalid and value most be at least 3');
+            node = sandbox('<input data-validation="format:[email], allowEmpty" value="" type="email">');
+            validator.validateInput(node);
+            return expect(node.dataset.errorMessage).toBe('');
+          });
         });
-        it('adds the correct error messages', function() {
-          var node;
+        describe('with validation depends on', function() {
+          return it('does not set an error message when checkbox is unchecked and field is invalid', function() {
+            var html, input, nodes;
 
-          node = sandbox('<input data-validation="format:[tel], length:[min:3]" value="foobar" type="email">');
-          validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('Telephone number is invalid');
+            html = "<div id=\"sandbox\">\n  <input type=\"checkbox\" id=\"checkbox\">\n  <input data-validation=\"format:[email], dependsOn:checkbox\" value=\"invalid email\" id=\"input\" type=\"email\">\n</div>";
+            nodes = sandbox(html);
+            $('body').append(html);
+            input = $('#input')[0];
+            validator.validateInput(input);
+            expect(input.dataset.errorMessage).toBe('');
+            return $('#sandbox').remove();
+          });
         });
-        describe('custom error messages', function() {
+        return describe('custom error messages', function() {
           it('also works with those', function() {
             var node;
 
@@ -303,24 +384,6 @@
             validator.validateInput(node);
             return expect(node.dataset.errorMessage).toBe('Field is invalid');
           });
-        });
-        it('changes the error message if it has to', function() {
-          var node;
-
-          node = sandbox('<input data-validation="format:[email], required:true" value="" type="email">');
-          validator.validateInput(node);
-          node.setAttribute('value', 'invalid email');
-          validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('Email is invalid');
-        });
-        return it('removes the error messages if the input becomes valid', function() {
-          var node;
-
-          node = sandbox('<input data-validation="format:[email]" value="foobar" type="email">');
-          validator.validateInput(node);
-          node.setAttribute('value', 'david.pdrsn@gmail.com');
-          validator.validateInput(node);
-          return expect(node.dataset.errorMessage).toBe('');
         });
       });
     });
@@ -343,7 +406,3 @@
   });
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=validator_spec.map
-*/

@@ -24,7 +24,11 @@ class @FormValidator
     for key in Object.keys(@_validations)
       regexes[key] = @_validations[key].regex
 
-    @parser = new Parser regexes
+    parser = new Parser regexes
+    parser.addDefaultValue 'required', true
+    parser.addDefaultValue 'allowEmpty', true
+
+    @parser = parser
 
   validateInput: (input) ->
     @_errorMessages = []
@@ -41,7 +45,14 @@ class @FormValidator
       validationResults.push false
 
     if validations.allowEmpty && value == ''
+      @_errorMessages = []
       validationResults = [true]
+
+    if validations.dependsOn
+      checked = document.getElementById(validations.dependsOn).checked
+      unless checked
+        @_errorMessages = []
+        validationResults = [true]
 
     @_setErrorMessage input, @_errorMessages
 
