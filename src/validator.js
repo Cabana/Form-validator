@@ -216,14 +216,18 @@
     };
 
     FormValidator.prototype._validateWordCount = function(value, lengths) {
-      var max, min, valid;
+      var length, max, min, valid;
 
       if (lengths == null) {
         lengths = {};
       }
       max = lengths.max;
       min = lengths.min;
-      valid = this._isLengthWithinRange(value.split(/[ ]+/).length, min, max);
+      length = value === '' ? length = 0 : value.split(/[ ]+/).length;
+      valid = this._isLengthWithinRange(length, min, max);
+      if (value === '' && !max) {
+        valid = false;
+      }
       if (!valid) {
         this._errorMessages.push(this._validations.wordCount.errorMessage(min, max));
       }
@@ -252,3 +256,7 @@
   })();
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=validator.map
+*/

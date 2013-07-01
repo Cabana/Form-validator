@@ -162,8 +162,6 @@
             var node;
 
             node = sandbox('<input data-validation="wordCount:[min:2]" value="foo bar baz" type="email">');
-            expect(validator.validateInput(node)).toBe(true);
-            node = sandbox('<input data-validation="wordCount:[min:2]" value="foo bar" type="email">');
             return expect(validator.validateInput(node)).toBe(true);
           });
           return it('returns false if the word count is out of range', function() {
@@ -173,20 +171,72 @@
             return expect(validator.validateInput(node)).toBe(false);
           });
         });
-        return describe('with only a max attribute', function() {
+        describe('with only a max attribute', function() {
           it('returns true if the input value is within range', function() {
             var node;
 
-            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo bar" type="email">');
-            expect(validator.validateInput(node)).toBe(true);
-            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo mads bar" type="email">');
+            node = sandbox('<input data-validation="wordCount:[max:2]" value="foo" type="email">');
             return expect(validator.validateInput(node)).toBe(true);
           });
           return it('returns false if the input value out of range', function() {
             var node;
 
-            node = sandbox('<input data-validation="wordCount:[max:3]" value="foo bar bax mads" type="email">');
+            node = sandbox('<input data-validation="wordCount:[max:2]" value="foo foo bar baz" type="email">');
             return expect(validator.validateInput(node)).toBe(false);
+          });
+        });
+        describe('with both a min and a max attribute', function() {
+          it('returns true if the input value is within range', function() {
+            var node;
+
+            node = sandbox('<input data-validation="wordCount:[min:2, max:5]" value="foo foo foo foo" type="email">');
+            return expect(validator.validateInput(node)).toBe(true);
+          });
+          it('returns false if the input value out of range', function() {
+            var node;
+
+            node = sandbox('<input data-validation="wordCount:[min:2, max:5]" value="foo" type="email">');
+            return expect(validator.validateInput(node)).toBe(false);
+          });
+          return describe('when min and max are the same', function() {
+            it('returns true if the input value is within range', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:2, max:2]" value="foo bar" type="email">');
+              return expect(validator.validateInput(node)).toBe(true);
+            });
+            return it('returns false if the input value is out of range', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:2, max:2]" value="foo bar foo" type="email">');
+              return expect(validator.validateInput(node)).toBe(false);
+            });
+          });
+        });
+        return describe('when input value is an empty string', function() {
+          describe('min:1 validation', function() {
+            return it('does not validate', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:1]" value="" type="email">');
+              return expect(validator.validateInput(node)).toBe(false);
+            });
+          });
+          describe('with only a max attribute', function() {
+            return it('does validate', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[max:3]" value="" type="email">');
+              return expect(validator.validateInput(node)).toBe(true);
+            });
+          });
+          return describe('with both a min and max value of 1', function() {
+            return it('does not validate', function() {
+              var node;
+
+              node = sandbox('<input data-validation="wordCount:[min:1, max:1]" value="" type="email">');
+              return expect(validator.validateInput(node)).toBe(false);
+            });
           });
         });
       });
@@ -406,3 +456,7 @@
   });
 
 }).call(this);
+
+/*
+//@ sourceMappingURL=validator_spec.map
+*/

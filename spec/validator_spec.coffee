@@ -107,8 +107,6 @@ describe 'Validator', ->
         it 'returns true if the word count is within range', ->
           node = sandbox '<input data-validation="wordCount:[min:2]" value="foo bar baz" type="email">'
           expect( validator.validateInput node ).toBe true
-          node = sandbox '<input data-validation="wordCount:[min:2]" value="foo bar" type="email">'
-          expect( validator.validateInput node ).toBe true
 
         it 'returns false if the word count is out of range', ->
           node = sandbox '<input data-validation="wordCount:[min:2]" value="foo" type="email">'
@@ -116,14 +114,46 @@ describe 'Validator', ->
 
       describe 'with only a max attribute', ->
         it 'returns true if the input value is within range', ->
-          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo bar" type="email">'
-          expect( validator.validateInput node ).toBe true
-          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo mads bar" type="email">'
+          node = sandbox '<input data-validation="wordCount:[max:2]" value="foo" type="email">'
           expect( validator.validateInput node ).toBe true
 
         it 'returns false if the input value out of range', ->
-          node = sandbox '<input data-validation="wordCount:[max:3]" value="foo bar bax mads" type="email">'
+          node = sandbox '<input data-validation="wordCount:[max:2]" value="foo foo bar baz" type="email">'
           expect( validator.validateInput node ).toBe false
+
+      describe 'with both a min and a max attribute', ->
+        it 'returns true if the input value is within range', ->
+          node = sandbox '<input data-validation="wordCount:[min:2, max:5]" value="foo foo foo foo" type="email">'
+          expect( validator.validateInput node ).toBe true
+
+        it 'returns false if the input value out of range', ->
+          node = sandbox '<input data-validation="wordCount:[min:2, max:5]" value="foo" type="email">'
+          expect( validator.validateInput node ).toBe false
+
+        describe 'when min and max are the same', ->
+          it 'returns true if the input value is within range', ->
+            node = sandbox '<input data-validation="wordCount:[min:2, max:2]" value="foo bar" type="email">'
+            expect( validator.validateInput node ).toBe true
+
+          it 'returns false if the input value is out of range', ->
+            node = sandbox '<input data-validation="wordCount:[min:2, max:2]" value="foo bar foo" type="email">'
+            expect( validator.validateInput node ).toBe false
+
+      describe 'when input value is an empty string', ->
+        describe 'min:1 validation', ->
+          it 'does not validate', ->
+            node = sandbox '<input data-validation="wordCount:[min:1]" value="" type="email">'
+            expect( validator.validateInput node ).toBe false
+
+        describe 'with only a max attribute', ->
+          it 'does validate', ->
+            node = sandbox '<input data-validation="wordCount:[max:3]" value="" type="email">'
+            expect( validator.validateInput node ).toBe true
+
+        describe 'with both a min and max value of 1', ->
+          it 'does not validate', ->
+            node = sandbox '<input data-validation="wordCount:[min:1, max:1]" value="" type="email">'
+            expect( validator.validateInput node ).toBe false
 
     describe 'validation depends on', ->
       afterEach ->

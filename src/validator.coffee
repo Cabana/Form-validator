@@ -138,8 +138,15 @@ class @FormValidator
   _validateWordCount: (value, lengths = {}) ->
     max = lengths.max
     min = lengths.min
-    valid = @_isLengthWithinRange value.split(/[ ]+/).length, min, max
-    @_errorMessages.push @_validations.wordCount.errorMessage min, max unless valid
+
+    length = if value == ''
+               length = 0
+             else
+               value.split(/[ ]+/).length
+
+    valid = @_isLengthWithinRange length, min, max
+    valid = false if value == '' && !max
+    unless valid then @_errorMessages.push @_validations.wordCount.errorMessage min, max
     valid
 
   _isLengthWithinRange: (length, min, max) ->
