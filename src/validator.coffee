@@ -79,6 +79,9 @@ class @FormValidator
     tel:
       regex: '\\d{8}',
       errorMessage: 'Telephone number is invalid'
+    number:
+      regex: '^\\d+$'
+      errorMessage: 'Not a number'
     length:
       errorMessage: (min, max) ->
         if max && min

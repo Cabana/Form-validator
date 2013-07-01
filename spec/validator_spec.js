@@ -281,6 +281,20 @@
           return expect(validator.validateInput(input)).toBe(false);
         });
       });
+      describe('number format', function() {
+        it('returns true if the string contains only numeric values', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[number]" value="123" type="email">');
+          return expect(validator.validateInput(node)).toBe(true);
+        });
+        return it('returns false if the string contains non numeric values', function() {
+          var node;
+
+          node = sandbox('<input data-validation="format:[number]" value="1f23" type="email">');
+          return expect(validator.validateInput(node)).toBe(false);
+        });
+      });
       return describe('setting error messages', function() {
         it('sets the error message on an input with email validation', function() {
           var node;
