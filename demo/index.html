@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo of form validator</title>
+    <meta charset="UTF-8">
+
+    <script src="../src/lib/jquery/jquery.min.js"></script>
+    <script src="../src/lib/parser/src/parser.js"></script>
+    <script src="../src/validator.js"></script>
+    <script src="../src/jquery.validator.js"></script>
+    <script src="script.js"></script>
+
+    <style>
+      input.input-with-error {
+        background: red;
+      }
+      .field-with-error {
+        border: 3px solid red;
+      }
+      .form-with-error {
+        background: rgba(255,0,0,.1);
+      }
+    </style>
+  </head>
+  <body>
+
+    <form action="#">
+
+      <div class="field">
+        <label>First name(s):</label>
+        <input data-validation="wordCount:[min:1]" type="text">
+      </div>
+
+      <div class="field">
+        <label>Last name:</label>
+        <input data-validation="wordCount:[max:1]" type="text">
+      </div>
+
+      <div class="field">
+        <label>Email:</label>
+        <input data-validation="format:[email]" type="text">
+      </div>
+
+      <div class="field">
+        <label>CPR:</label>
+        <input data-validation="format:[cpr]" type="text">
+      </div>
+
+      <div class="field">
+        <label>Password:</label>
+        <input data-validation="length:[min:3]" type="password">
+      </div>
+
+      <div class="actions">
+        <input type="submit">
+      </div>
+
+    </form>
+
+  </body>
+</html>
