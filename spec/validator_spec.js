@@ -470,7 +470,3 @@
   });
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=validator_spec.map
-*/

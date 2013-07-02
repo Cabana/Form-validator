@@ -260,7 +260,3 @@
   })();
 
 }).call(this);
-
-/*
-//@ sourceMappingURL=validator.map
-*/

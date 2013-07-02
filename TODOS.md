@@ -35,9 +35,9 @@
 
 ## jQuery plugin
 
-- [ ] Validate form on submit
-- [ ] Option to validate on blur
-- [ ] Put error messages into DOM
-- [ ] Add classes to input
-- [ ] Add classes to input wrapper elements
-- [ ] Accept a custom form validator or make its own internally
+- [x] Validate form on submit
+- [x] Option to validate on blur
+- [x] Put error messages into DOM
+- [x] Add classes to input
+- [x] Add classes to input wrapper elements
+- [x] Accept a custom form validator or make its own internally

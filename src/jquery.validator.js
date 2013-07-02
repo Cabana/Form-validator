@@ -4,6 +4,7 @@
   var pluginName = "validate",
   defaults = {
     validator: new FormValidator(),
+    onBlur: false,
     selectorClasses: {
       field: '.field'
     },
@@ -38,26 +39,30 @@
       $(element).on('submit', function(e){
 
         if ( validator.validateForm(element) ) {
-          // valid
-          e.preventDefault();
-          console.log('valid');
+          // every field was valid
         } else {
-          // invalid
+          // there were invalid fields
           e.preventDefault();
-          console.log('invalid');
         }
 
         that.setErrorClasses(element, options);
-
         that.setErrorMessages(element, options);
 
       });
+
+      if (options.onBlur) {
+        $(element).find('[data-validation]').on('blur', function(e){
+          validator.validateInput(this);
+          that.setErrorClasses(element, options);
+          that.setErrorMessages(element, options);
+        });
+      }
     },
 
     setErrorClasses: function(element, options) {
-      $('.input-with-error').removeClass(options.errorClasses.input);
-      $('.field-with-error').removeClass(options.errorClasses.field);
-      $('.form-with-error').removeClass(options.errorClasses.form);
+      $('.' + options.errorClasses.input).removeClass(options.errorClasses.input);
+      $('.' + options.errorClasses.field).removeClass(options.errorClasses.field);
+      $('.' + options.errorClasses.form).removeClass(options.errorClasses.form);
 
       var inputs = $(element).find('[data-error-message]');
       inputs.each(function() {
