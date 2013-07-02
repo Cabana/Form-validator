@@ -76,7 +76,7 @@ Here are a few examples:
 <input data-validation="length:[min:3, max:50]" type="text">
 <input data-validation="wordCount:[min:2]" type="text">
 <input data-validation="format:[email], allowEmpty" type="text">
-<input data-validation="format:[number], length:[min:10, max:20]" type="text">
+<input data-validation="format:[number], length:[min:10, max:20], dependsOn:myCheckbox" type="text">
 ```
 
 ## More advanced uses
