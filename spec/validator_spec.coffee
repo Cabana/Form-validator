@@ -4,11 +4,6 @@ describe 'Validator', ->
   beforeEach ->
     validator = new FormValidator
 
-  describe '#defineCustomValidation', ->
-    it 'defines a new validation format', ->
-      validator.defineCustomValidation 'cpr', "\\d{6}-\\d{4}", 'Foo'
-      expect( validator._validations.cpr ).toEqual { regex: "\\d{6}-\\d{4}", errorMessage: 'Foo' }
-
   describe '#validateInput', ->
     describe 'format validation', ->
       describe 'email', ->
@@ -31,7 +26,7 @@ describe 'Validator', ->
 
       describe 'a custom format', ->
         it 'returns true if the format matches', ->
-          validator.defineCustomValidation 'cpr', "\\d{6}-\\d{4}"
+          validator.defineValidation 'cpr', /\d{6}-\d{4}/
           node = sandbox '<input data-validation="format:[cpr]" value="060890-1234" type="text">'
           expect( validator.validateInput node ).toBe true
 
@@ -71,15 +66,17 @@ describe 'Validator', ->
 
       describe 'with both a min and max range', ->
         it 'returns true if the input value is within range', ->
-          node = sandbox '<input data-validation="length:[min:1, max:10]" value="foo" type="email">'
+          node = sandbox '<input data-validation="length:[min:2, max:10]" value="valid" type="email">'
           expect( validator.validateInput node ).toBe true
-          node = sandbox '<input data-validation="length:[min:1, max:10]" value="f" type="email">'
+          node = sandbox '<input data-validation="length:[min:2, max:10]" value="fo" type="email">'
           expect( validator.validateInput node ).toBe true
-          node = sandbox '<input data-validation="length:[min:1, max:10]" value="qwertyuiop" type="email">'
+          node = sandbox '<input data-validation="length:[min:2, max:10]" value="qwertyuiop" type="email">'
           expect( validator.validateInput node ).toBe true
 
         it 'returns false if the input value is out of range', ->
-          node = sandbox '<input data-validation="length:[min:1, max:10]" value="ahdsfoiuagosyudgfoausyhdf" type="email">'
+          node = sandbox '<input data-validation="length:[min:2, max:10]" value="ahdsfoiuagosyudgfoausyhdf" type="email">'
+          expect( validator.validateInput node ).toBe false
+          node = sandbox '<input data-validation="length:[min:2, max:10]" value="f" type="email">'
           expect( validator.validateInput node ).toBe false
 
       describe 'with an exact length', ->
@@ -163,7 +160,7 @@ describe 'Validator', ->
         html = """
                 <div id="sandbox">
                   <input type="checkbox" id="checkbox" checked>
-                  <input data-validation="format:[email], dependsOn:checkbox" value="david@gmail.com" id="input" type="email">
+                  <input data-validation="format:[email], onlyIfChecked:checkbox" value="david@gmail.com" id="input" type="email">
                 </div>
                """
         nodes = sandbox html
@@ -175,7 +172,7 @@ describe 'Validator', ->
         html = """
                 <div id="sandbox">
                   <input type="checkbox" id="checkbox">
-                  <input data-validation="format:[email], dependsOn:checkbox" value="david@gmail.com" id="input" type="email">
+                  <input data-validation="format:[email], onlyIfChecked:checkbox" value="david@gmail.com" id="input" type="email">
                 </div>
                """
         nodes = sandbox html
@@ -187,7 +184,7 @@ describe 'Validator', ->
         html = """
                 <div id="sandbox">
                   <input type="checkbox" id="checkbox">
-                  <input data-validation="format:[email], dependsOn:checkbox" value="invalid email" id="input" type="email">
+                  <input data-validation="format:[email], onlyIfChecked:checkbox" value="invalid email" id="input" type="email">
                 </div>
                """
         nodes = sandbox html
@@ -199,7 +196,7 @@ describe 'Validator', ->
         html = """
                 <div id="sandbox">
                   <input type="checkbox" id="checkbox" checked>
-                  <input data-validation="format:[email], dependsOn:checkbox" value="invalid email" id="input" type="email">
+                  <input data-validation="format:[email], onlyIfChecked:checkbox" value="invalid email" id="input" type="email">
                 </div>
                """
         nodes = sandbox html

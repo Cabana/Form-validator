@@ -17,146 +17,124 @@ toSentence = (array) ->
       sentence = array.slice(0, -1).join(wordsConnector) + lastWordConnector + array[array.length - 1]
   sentence
 
+class Errors
+  constructor: ->
+    @errors = []
+
+  add: (message) ->
+    @errors.push message
+
+  none: ->
+    if @errors.length == 0
+      true
+    else
+      false
+
+  alwaysReturn: (boolean) ->
+    @none = ->
+      boolean
+
+  fullMessages: ->
+    toSentence(@errors).toLowerCase().capitalize()
+
+class ValidatableInput
+  constructor: (input) ->
+    @input = input
+
+  setupErrorMessage: (fullMessages) ->
+    @input.setAttribute 'data-error-message', fullMessages
+
+  resetErrorMessages: ->
+    @input.removeAttribute 'data-error-message'
+
+  validations: ->
+    @input.dataset.validation
+
+  asHtmlNode: ->
+    @input
+
 class @FormValidator
   constructor: ->
-    regexes = {}
-
-    for key in Object.keys(@_validations)
-      regexes[key] = @_validations[key].regex
-
-    parser = new Parser regexes
+    parser = new Parser
     parser.addDefaultValue 'required', true
     parser.addDefaultValue 'allowEmpty', true
 
     @parser = parser
 
-  validateInput: (input) ->
-    @_errorMessages = []
-    value = input.value
-    validations = @_generateValidations input.dataset.validation
+    @_setupBuiltInValidations()
 
-    validationResults = []
-    validationResults.push @_validateFormat value, validations.format if validations.format
-    validationResults.push @_validateLength value, validations.length if validations.length
-    validationResults.push @_validateWordCount value, validations.wordCount if validations.wordCount
+  defineValidation: (name, validatorFunction, errorMessage) ->
+    @_validations[name] = {
+      validationHandler: validatorFunction,
+      errorMessage: errorMessage
+    }
 
-    if validations.required && value == ''
-      @_errorMessages.push @_validations.required.errorMessage
-      validationResults.push false
+  validateInput: (inputNode) ->
+    input = new ValidatableInput inputNode
 
-    if validations.allowEmpty && value == ''
-      @_errorMessages = []
-      validationResults = [true]
+    validations = @_generateValidations input.validations()
+    @errors = new Errors
 
-    if validations.dependsOn
-      checked = document.getElementById(validations.dependsOn).checked
-      unless checked
-        @_errorMessages = []
-        validationResults = [true]
+    @_performBuiltinValidations(input.asHtmlNode(), validations)
+    @_performFormatValidation(input.asHtmlNode(), validations.format)
 
-    @_setErrorMessage input, @_errorMessages
+    input.resetErrorMessages input
 
-    if false in validationResults then return false else return true
-
-  defineCustomValidation: (name, regex, errorMessage = @_validations.customValidations.defaultErrorMessage) ->
-    @_validations[name] = {}
-    @_validations[name].regex = regex
-    @_validations[name].errorMessage = errorMessage
-    @parser.addDefaultValue name, regex
-
-  validateForm: (form) ->
-    validationResults = []
-
-    for input in form.querySelectorAll '[data-validation]'
-      validationResults.push @validateInput input
-
-    if false in validationResults then return false else return true
-
-  _validations:
-    email:
-      regex: '.+@.+\\..+',
-      errorMessage: 'Email is invalid'
-    tel:
-      regex: '\\d{8}',
-      errorMessage: 'Telephone number is invalid'
-    number:
-      regex: '^\\d+$'
-      errorMessage: 'Not a number'
-    length:
-      errorMessage: (min, max) ->
-        if max && min
-          "Value most be at least #{min} and maximum #{max} characters long"
-        else if min
-          "Value most be at least #{min}"
-        else if max
-          "Value can't be longer than #{max}"
-    wordCount:
-      errorMessage: (min, max) ->
-        if max && min
-          "Can't contain less than #{min} or more than #{max} words"
-        else if min
-          "Can't contain less than #{min} words"
-        else if max
-          "Can't contain more than #{max} words"
-    required:
-      errorMessage: "Can't be blank"
-    customValidations:
-      defaultErrorMessage: "Field is invalid"
-
-  _errorMessages: []
-
-  _setErrorMessage: (input, messages) ->
-    @_resetErrorMessage input
-    messages = [input.dataset.errorMessage] if input.dataset.errorMessage
-    fullMessage = toSentence(messages).toLowerCase().capitalize()
-    if fullMessage == ''
-      input.removeAttribute 'data-error-message'
+    if @errors.none()
+      return true
     else
-      input.setAttribute 'data-error-message', fullMessage
+      input.setupErrorMessage @errors.fullMessages()
+      return false
 
-  _resetErrorMessage: (input) ->
-    input.setAttribute 'data-error-message', ''
+  _validations: {}
+
+  _performFormatValidation: (input, format) ->
+    if format
+      for key in Object.keys format
+        unless @_validations[key].validationHandler.test input.value
+          @errors.add @_validations[key].errorMessage
+
+  _performBuiltinValidations: (input, validations) ->
+    for key in Object.keys validations
+      if key != 'format'
+        @_validations[key].validationHandler(input, validations)
+
+  _setupBuiltInValidations: ->
+    @defineValidation 'email', /.+@.+\..+/, 'Email is invalid'
+    @defineValidation 'tel', /\d{8}/, 'Telephone number is invalid'
+    @defineValidation 'number', /^\d+$/, 'Invalid'
+
+    @defineValidation 'required', (input, data) =>
+      unless /^.+$/.test input.value
+        @errors.add "Can't be blank"
+
+    @defineValidation 'length', (input, data) =>
+      @_performRangeValidation input.value.length, data.length.min, data.length.max
+
+    @defineValidation 'wordCount', (input, data) =>
+      length = if input.value is ''
+                 length = 0
+               else
+                 input.value.split(/[ ]+/).length
+
+      @_performRangeValidation length, data.wordCount.min, data.wordCount.max
+
+    @defineValidation 'allowEmpty', (input, data) =>
+      @_alwaysValidIf input.value is ''
+
+    @defineValidation 'onlyIfChecked', (input, data) =>
+      @_alwaysValidIf !document.getElementById(data.onlyIfChecked).checked
+
+  _performRangeValidation: (length, min, max) ->
+    if max and min and length not in [min..max]
+      @errors.add "Value most be at least #{min} and maximum #{max} characters long"
+    else if min and length < min
+      @errors.add "Value most be at least #{min}"
+    else if max and length > max
+      @errors.add "Value can't be longer than #{max}"
+
+  _alwaysValidIf: (condition) ->
+      @errors.alwaysReturn [] if condition
 
   _generateValidations: (string) ->
     @parser.parse string
-
-  _validateFormat: (value, format = {}) ->
-    validationResults = []
-
-    Object.keys(format).forEach (key) =>
-      regex = new RegExp format[key]
-      valid = regex.test value
-      @_errorMessages.push @_validations[key].errorMessage unless valid
-      validationResults.push valid
-
-    if false in validationResults then return false else return true
-
-  _validateLength: (value, lengths = {}) ->
-    max = lengths.max
-    min = lengths.min
-    valid = @_isLengthWithinRange value.length, min, max
-    @_errorMessages.push @_validations.length.errorMessage min, max unless valid
-    valid
-
-  _validateWordCount: (value, lengths = {}) ->
-    max = lengths.max
-    min = lengths.min
-
-    length = if value == ''
-               length = 0
-             else
-               value.split(/[ ]+/).length
-
-    valid = @_isLengthWithinRange length, min, max
-    valid = false if value == '' && !max
-    unless valid then @_errorMessages.push @_validations.wordCount.errorMessage min, max
-    valid
-
-  _isLengthWithinRange: (length, min, max) ->
-    if max && min
-      valid = length in [min..max]
-    else if min
-      valid = length >= min
-    else if max
-      valid = length <= max
-    valid

@@ -3,13 +3,13 @@ src_dir:
 src_files:
   - 'lib/jquery/jquery.min.js'
   - 'lib/parser/src/parser.js'
-  - 'validator.coffee'
+  - 'validator.js'
 stylesheets:
 boot_dir: 'spec/support'
 boot_files:
 helpers:
   - 'helpers/**/*.js'
 spec_files:
-  - '**/*[Ss]pec.coffee'
+  - '**/*[Ss]pec.js'
 spec_dir:
   - 'spec'
