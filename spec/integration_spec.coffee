@@ -5,7 +5,7 @@ describe 'Validator', ->
     validator = new FormValidator
 
   describe '#validateForm', ->
-    xit 'returns true if all the inputs with validation within the form are valid', ->
+    it 'returns true if all the inputs with validation within the form are valid', ->
       formHTML = """
               <form action="javascript:void()">
                 <input data-validation="format:[email]" type="email" value="david.pdrsn@gmail.com">
@@ -15,7 +15,7 @@ describe 'Validator', ->
       formNode = sandbox formHTML
       expect( validator.validateForm formNode ).toBe true
 
-    xit 'returns false if the form contains invalid inputs', ->
+    it 'returns false if the form contains invalid inputs', ->
       formHTML = """
               <form action="javascript:void()">
                 <input data-validation="format:[email]" type="email" value="invalid email">

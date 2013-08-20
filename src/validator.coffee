@@ -1,3 +1,13 @@
+errors = new Object
+
+unless Object.keys
+  Object.keys = keys = (object) ->
+    buffer = []
+    key = undefined
+    for key of object
+      buffer.push key  if Object::hasOwnProperty.call(object, key)
+    buffer
+
 String::capitalize = ->
   @charAt(0).toUpperCase() + @slice(1)
 
@@ -37,6 +47,9 @@ class Errors
   fullMessages: ->
     toSentence(@errors).toLowerCase().capitalize()
 
+  all: ->
+    @errors
+
 class ValidatableInput
   constructor: (input) ->
     @input = input
@@ -48,10 +61,44 @@ class ValidatableInput
     @input.removeAttribute 'data-error-message'
 
   validations: ->
-    @input.dataset.validation
+    @input.getAttribute 'data-validation'
 
   asHtmlNode: ->
     @input
+
+class RangeValidation
+  constructor: (length, min, max) ->
+    @length = length
+    @min = min
+    @max = max
+
+  validate: ->
+    if @max and @min and @length not in [@min..@max]
+      errors.add @mixedMessage()
+    else if @min and @length < @min
+      errors.add @tooShortMessage()
+    else if @max and @length > @max
+      errors.add @tooLongMessage()
+
+class CharacterCountValidation extends RangeValidation
+  mixedMessage: ->
+    "Value most be at least #{@min} and maximum #{@max} characters long"
+
+  tooShortMessage: ->
+    "Value most be at least #{@min}"
+
+  tooLongMessage: ->
+    "Value can't be longer than #{@max}"
+
+class WordCountValidation extends RangeValidation
+  mixedMessage: ->
+    "Can't contain less than #{@min} or more than #{@max} words"
+
+  tooShortMessage: ->
+    "Can't contain less than #{@min} words"
+
+  tooLongMessage: ->
+    "Can't contain more than #{@max} words"
 
 class @FormValidator
   constructor: ->
@@ -69,21 +116,35 @@ class @FormValidator
       errorMessage: errorMessage
     }
 
+  validateForm: (form) ->
+    fields = form.querySelectorAll 'input, textarea'
+    validationResults = []
+
+    for field in fields
+      unless field.getAttribute('type') is 'submit'
+        validationResults.push @validateInput field
+
+    for result in validationResults
+      if result == false
+        return false
+
+    return true
+
   validateInput: (inputNode) ->
     input = new ValidatableInput inputNode
 
     validations = @_generateValidations input.validations()
-    @errors = new Errors
+    errors = new Errors
 
     @_performBuiltinValidations(input.asHtmlNode(), validations)
     @_performFormatValidation(input.asHtmlNode(), validations.format)
 
     input.resetErrorMessages input
 
-    if @errors.none()
+    if errors.none()
       return true
     else
-      input.setupErrorMessage @errors.fullMessages()
+      input.setupErrorMessage errors.fullMessages()
       return false
 
   _validations: {}
@@ -92,7 +153,7 @@ class @FormValidator
     if format
       for key in Object.keys format
         unless @_validations[key].validationHandler.test input.value
-          @errors.add @_validations[key].errorMessage
+          errors.add @_validations[key].errorMessage
 
   _performBuiltinValidations: (input, validations) ->
     for key in Object.keys validations
@@ -106,10 +167,10 @@ class @FormValidator
 
     @defineValidation 'required', (input, data) =>
       unless /^.+$/.test input.value
-        @errors.add "Can't be blank"
+        errors.add "Can't be blank"
 
     @defineValidation 'length', (input, data) =>
-      @_performRangeValidation input.value.length, data.length.min, data.length.max
+      new CharacterCountValidation(input.value.length, data.length.min, data.length.max).validate()
 
     @defineValidation 'wordCount', (input, data) =>
       length = if input.value is ''
@@ -117,7 +178,7 @@ class @FormValidator
                else
                  input.value.split(/[ ]+/).length
 
-      @_performRangeValidation length, data.wordCount.min, data.wordCount.max
+      new WordCountValidation(length, data.wordCount.min, data.wordCount.max).validate()
 
     @defineValidation 'allowEmpty', (input, data) =>
       @_alwaysValidIf input.value is ''
@@ -125,16 +186,8 @@ class @FormValidator
     @defineValidation 'onlyIfChecked', (input, data) =>
       @_alwaysValidIf !document.getElementById(data.onlyIfChecked).checked
 
-  _performRangeValidation: (length, min, max) ->
-    if max and min and length not in [min..max]
-      @errors.add "Value most be at least #{min} and maximum #{max} characters long"
-    else if min and length < min
-      @errors.add "Value most be at least #{min}"
-    else if max and length > max
-      @errors.add "Value can't be longer than #{max}"
-
   _alwaysValidIf: (condition) ->
-      @errors.alwaysReturn [] if condition
+      errors.alwaysReturn [] if condition
 
   _generateValidations: (string) ->
     @parser.parse string

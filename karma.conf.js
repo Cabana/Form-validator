@@ -15,7 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src/lib/jquery/jquery.min.js',
-      'src/lib/parser/src/parser.js',
+      'src/lib/parser/build/parser.js',
       'src/*.coffee',
       'spec/helpers/*.js',
       'spec/*_spec.coffee'
@@ -58,7 +58,7 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome', 'Safari', 'Firefox', 'Opera'],
 
 
     // If browser does not capture in given timeout [ms], kill it

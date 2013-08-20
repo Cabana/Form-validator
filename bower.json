@@ -9,6 +9,6 @@
   ],
   "dependencies": {
     "jquery": "1.10.1",
-    "parser": "https://github.com/Cabana/parser.git"
+    "parser": "https://github.com/Cabana/Parser.git"
   }
 }
