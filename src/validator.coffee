@@ -74,11 +74,11 @@ class RangeValidation
 
   validate: ->
     if @max and @min and @length not in [@min..@max]
-      errors.add @mixedMessage()
+      @mixedMessage()
     else if @min and @length < @min
-      errors.add @tooShortMessage()
+      @tooShortMessage()
     else if @max and @length > @max
-      errors.add @tooLongMessage()
+      @tooLongMessage()
 
 class CharacterCountValidation extends RangeValidation
   mixedMessage: ->
@@ -158,7 +158,9 @@ class @FormValidator
   _performBuiltinValidations: (input, validations) ->
     for key in Object.keys validations
       if key != 'format'
-        @_validations[key].validationHandler(input, validations)
+        result = @_validations[key].validationHandler(input, validations)
+        if result
+          errors.add result
 
   _setupBuiltInValidations: ->
     @defineValidation 'email', /.+@.+\..+/, 'Email is invalid'
@@ -167,7 +169,7 @@ class @FormValidator
 
     @defineValidation 'required', (input, data) =>
       unless /^.+$/.test input.value
-        errors.add "Can't be blank"
+        "Can't be blank"
 
     @defineValidation 'length', (input, data) =>
       new CharacterCountValidation(input.value.length, data.length.min, data.length.max).validate()

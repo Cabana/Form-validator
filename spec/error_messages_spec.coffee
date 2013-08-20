@@ -103,3 +103,34 @@ describe 'Validator', ->
         validator.validateInput input
         expect( input.getAttribute 'data-error-message' ).toBe null
         $('#sandbox').remove()
+
+    describe 'with a custom validator', ->
+      describe 'a format validation', ->
+        it 'can be used to validate a valid field', ->
+          node = sandbox '<input data-validation="format:[cpr]" value="090909-6677" type="email">'
+          validator.defineValidation 'cpr', /\d{6}-\d{4}/, 'Invalid cpr number'
+          validator.validateInput node
+          expect( node.getAttribute 'data-error-message' ).toBe null
+
+        it 'can be used to validate an invalid field', ->
+          node = sandbox '<input data-validation="format:[cpr]" value="invalid value" type="email">'
+          validator.defineValidation 'cpr', /\d{6}-\d{4}/, 'Invalid cpr number'
+          validator.validateInput node
+          expect( node.getAttribute 'data-error-message' ).toBe 'Invalid cpr number'
+
+      describe 'a function based validation', ->
+        it 'can be used to validate a valid field', ->
+          node = sandbox '<input data-validation="newRequired" value="valid value" type="email">'
+          validator.defineValidation 'newRequired', (input, data) ->
+            unless /^.+$/.test input.value
+              "Can't be blank"
+          validator.validateInput node
+          expect( node.getAttribute 'data-error-message' ).toBe null
+
+        it 'can be used to validate an invalid field', ->
+          node = sandbox '<input data-validation="newRequired" value="" type="email">'
+          validator.defineValidation 'newRequired', (input, data) ->
+            unless /^.+$/.test input.value
+              "Can't be blank"
+          validator.validateInput node
+          expect( node.getAttribute 'data-error-message' ).toBe "Can't be blank"
