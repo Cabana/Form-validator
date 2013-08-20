@@ -212,3 +212,34 @@ describe 'Validator', ->
       it 'returns false if the string contains non numeric values', ->
         node = sandbox '<input data-validation="format:[number]" value="1f23" type="email">'
         expect( validator.validateInput node ).toBe false
+
+    describe 'with a custom validator', ->
+      describe 'a format validation', ->
+        it 'can be used to validate a valid field', ->
+          node = sandbox '<input data-validation="format:[cpr]" value="090909-6677" type="email">'
+          validator.defineValidation 'cpr', /\d{6}-\d{4}/, 'Invalid CPR number'
+          expect( validator.validateInput node ).toBe true
+
+        it 'can be used to validate an invalid field', ->
+          node = sandbox '<input data-validation="format:[cpr]" value="invalid" type="email">'
+          validator.defineValidation 'cpr', /\d{6}-\d{4}/, 'Invalid CPR number'
+          expect( validator.validateInput node ).toBe false
+
+      describe 'a function based validation', ->
+        it 'can be used to validate a valid field', ->
+          node = sandbox '<input data-validation="newRequired" value="valid value" type="email">'
+
+          validator.defineValidation 'newRequired', (input, data) ->
+            unless /^.+$/.test input.value
+              errors.add "Can't be blank"
+
+          expect( validator.validateInput node ).toBe true
+
+        it 'can be used to validate an invalid field', ->
+          node = sandbox '<input data-validation="newRequired" value="" type="email">'
+
+          validator.defineValidation 'newRequired', (input, data) ->
+            unless /^.+$/.test input.value
+              errors.add "Can't be blank"
+
+          expect( validator.validateInput node ).toBe false

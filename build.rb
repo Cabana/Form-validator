@@ -1,15 +1,24 @@
 require 'closure-compiler'
+require 'coffee-script'
 
-js_files = [
-  "src/lib/parser/src/parser.js",
-  "src/validator.js",
+compiler = Closure::Compiler.new(compilation_level: 'SIMPLE_OPTIMIZATIONS')
+
+files = [
+  "src/lib/parser/build/parser.js",
+  "src/validator.coffee",
   "src/jquery.validator.js"
 ]
 
-compilation_levels = { simple: 'SIMPLE_OPTIMIZATIONS', advanced: 'ADVANCED_OPTIMIZATIONS', whitespace: 'WHITESPACE_ONLY' }
+js = files.inject '' do |result, js_component|
+  result += if js_component =~ /.*\.coffee$/
+              CoffeeScript.compile File.read(js_component)
+            else
+              File.read(js_component)
+            end
+end
 
-contents = Closure::Compiler.new(compilation_level: compilation_levels[:simple]).compile_files js_files
+contents = compiler.compile js
 
-File.open "build/jquery.validator.js", "w" do |file|
+File.open 'build/jquery.validator.js', "w" do |file|
   file.write contents
 end
