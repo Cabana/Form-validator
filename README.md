@@ -62,7 +62,7 @@ The plugin comes with a number of different validations built in.
 - `allowEmpty` - If this is set the input will be valid if it is empty even though it has other validations.
 - `length` - Checks the number of characters in the value. Supports both a min and max attribute.
 - `wordCount` - Same as length but counts words instead of characters. Also supports min and max attributes.
-- `dependsOn` - Input will only get validated if the checkbox with the specified id is checked.
+- `onlyIfChecked` - Input will only get validated if the checkbox with the specified id is checked. See examples below.
 
 ## Building validations
 The built in validations (and your own custom ones) can be combined in many ways to create quite sophisticated validations. All validations live inside a `data-validation` attribute on the input element.
@@ -76,7 +76,7 @@ Here are a few examples:
 <input data-validation="length:[min:3, max:50]" type="text">
 <input data-validation="wordCount:[min:2]" type="text">
 <input data-validation="format:[email], allowEmpty" type="text">
-<input data-validation="format:[number], length:[min:10, max:20], dependsOn:myCheckbox" type="text">
+<input data-validation="format:[number], length:[min:10, max:20], onlyIfChecked:myCheckbox" type="text">
 ```
 
 ## More advanced uses
@@ -91,7 +91,13 @@ Here is an example:
 var customValidator = new FormValidator();
 
 // add new validation formats to it
-customValidator.defineCustomValidation('cpr', "\\d{6}-\\d{4}", 'Invalid CPR number');
+customValidator.defineValidation('cpr', /\d{6}-\d{4}/, 'Invalid cpr number');
+
+customValidator.defineValidation('exactLength', function(input, data) {
+  if (input.value.length != data.exactLength) {
+    return "Input must be exactly " + data.exactLength + " characters long";
+  }
+});
 
 // tell the plugin to use it
 $('form').validate({
@@ -99,17 +105,17 @@ $('form').validate({
 });
 ```
 
-Using your custom format
+Using your custom validations:
 
 ```html
-<input data-validation="format:[cpr]" type="text">
+<input data-validation="format:[cpr], exactLength: 11" type="text">
 ```
 
 The `.defineCustomValidation` methods takes three arguments:
 
-1. The name of the validation format
-2. The regexp to match against. This regexp has to be formatted a bit specially. A backslash should be written as two backslashes like in the example above, and the whole regexp shouldn't be wrapped in forward slashes.
-3. The error message (optional).
+1. The name of the validation.
+2. Either a regexp or a function. If a regexp is given it use that when validating the field and if it doesn't match then the field is invalid. If a function is given it will use that function to perform the validation. That function gets called with two arguments: The input element itself (as an `HTMLHtmlElement`) and the data that was given in the `data-validation` attribute, if any. To make a field invalid simply return a string. This will also be the error message that gets shown. In order for the field to be valid return some falsy value, normally `null`.
+3. If a regexp is passed as the second argument the third argument will be the error message that will be shown if the field is invalid.
 
 ## Options
 The jQuery plugin has a few options.
@@ -127,9 +133,7 @@ $('form').validate({
 ## Further development
 The validator class is built using a [test driven](http://en.wikipedia.org/wiki/Test-driven_development) style. This simply means that no implementation code was written without having a test of it first. The testing framework used is [jasmine](http://pivotal.github.io/jasmine/).
 
-When developing you will need to make sure jasmine and other dependencies are installed. Run `bundle install` from the root of the project to do so.
-
-The test suite can be run by running `rake jasmine` from the root and then going to `http://localhost:8888/`.
+Setup [karma](http://karma-runner.github.io/) and run the tests with `karma start`.
 
 ## Building the project
 Run `ruby build.rb` from the root of the project to build. The output will be put in the build folder.
