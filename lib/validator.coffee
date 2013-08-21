@@ -53,9 +53,10 @@ class Errors
 class ValidatableInput
   constructor: (input) ->
     @input = input
+    @customMessage = @input.getAttribute 'data-custom-error-message'
 
   setupErrorMessage: (fullMessages) ->
-    @input.setAttribute 'data-error-message', fullMessages
+    @input.setAttribute 'data-error-message', @customMessage || fullMessages
 
   resetErrorMessages: ->
     @input.removeAttribute 'data-error-message'
@@ -136,7 +137,7 @@ class @FormValidator
     @_performBuiltinValidations(input.asHtmlNode(), validations)
     @_performFormatValidation(input.asHtmlNode(), validations.format)
 
-    input.resetErrorMessages input
+    input.resetErrorMessages()
 
     if errors.none()
       return true

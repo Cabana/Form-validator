@@ -134,3 +134,11 @@ describe 'Validator', ->
               "Can't be blank"
           validator.validateInput node
           expect( node.getAttribute 'data-error-message' ).toBe "Can't be blank"
+
+    describe 'with custom error messages', ->
+      it 'overrides the other error message', ->
+        console.log '-------------'
+        node = sandbox '<input data-validation="format:[email]" data-custom-error-message="custom message" value="invalid email" type="email">'
+        validator.validateInput node
+        expect( node.getAttribute 'data-error-message' ).toBe 'custom message'
+        console.log '-------------'

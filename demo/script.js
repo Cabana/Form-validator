@@ -4,6 +4,8 @@ $(function(){
 
   customValidator.defineValidation('cpr', /\d{6}-\d{4}/, 'Invalid cpr number');
 
+  customValidator.defineValidation('zip', /^\d{4}$/, 'Invalid zip code');
+
   customValidator.defineValidation('newRequired', function(input, data) {
     if (!/^.+$/.test(input.value)) {
       return "Can't be blank";
@@ -17,7 +19,8 @@ $(function(){
   });
 
   $('form').validate({
-    validator: customValidator
+    validator: customValidator,
+    onBlur: true
   });
 
 });
