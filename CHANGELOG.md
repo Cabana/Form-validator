@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 (unfinished)
+- Support for custom error messages.
+- Focus on first input with errors.
+
 ## 0.2.1
 - Fix bugs related to required checkboxes.
 - Add test for required select boxes.
