@@ -111,7 +111,7 @@ Using your custom validations:
 <input data-validation="format:[cpr], exactLength: 11" type="text">
 ```
 
-The `.defineCustomValidation` methods takes three arguments:
+The `.defineValidation` methods takes three arguments:
 
 1. The name of the validation.
 2. Either a regexp or a function. If a regexp is given it use that when validating the field and if it doesn't match then the field is invalid. If a function is given it will use that function to perform the validation. That function gets called with two arguments: The input element itself (as an `HTMLHtmlElement`) and the data that was given in the `data-validation` attribute, if any. To make a field invalid simply return a string. This will also be the error message that gets shown. In order for the field to be valid return some falsy value, normally `null`.
@@ -129,6 +129,11 @@ $('form').validate({
 
 });
 ```
+
+## Custom error messages
+To customize the error messages on an input use a `data-custom-error-message` attribute. Example:
+
+`<input data-validation="format:[email]" data-custom-error-message="My message" type="text">`
 
 ## Further development
 The validator class is built using a [test driven](http://en.wikipedia.org/wiki/Test-driven_development) style. This simply means that no implementation code was written without having a test of it first. The testing framework used is [jasmine](http://pivotal.github.io/jasmine/).
