@@ -11,20 +11,20 @@ unless Object.keys
 String::capitalize = ->
   @charAt(0).toUpperCase() + @slice(1)
 
-toSentence = (array) ->
+Array::toSentence = ->
   wordsConnector = ", "
   twoWordsConnector = " and "
   lastWordConnector = ", and "
   sentence = undefined
-  switch array.length
+  switch @length
     when 0
       sentence = ""
     when 1
-      sentence = array[0]
+      sentence = @[0]
     when 2
-      sentence = array[0] + twoWordsConnector + array[1]
+      sentence = @[0] + twoWordsConnector + @[1]
     else
-      sentence = array.slice(0, -1).join(wordsConnector) + lastWordConnector + array[array.length - 1]
+      sentence = @.slice(0, -1).join(wordsConnector) + lastWordConnector + @[@.length - 1]
   sentence
 
 class Errors
@@ -45,7 +45,7 @@ class Errors
       boolean
 
   fullMessages: ->
-    toSentence(@errors).toLowerCase().capitalize()
+    @errors.toSentence().toLowerCase().capitalize()
 
   all: ->
     @errors
