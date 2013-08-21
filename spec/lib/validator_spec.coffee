@@ -39,6 +39,27 @@ describe 'Validator', ->
         node = sandbox '<input data-validation="required" value="" type="email">'
         expect( validator.validateInput node ).toBe false
 
+      describe 'with a select box', ->
+        it 'returns true is it has a value', ->
+          html = """
+                   <select data-validation="required">
+                     <option value="">Please select something</option>
+                     <option value="foo" selected>Foo</option>
+                   </select>
+                 """
+          node = sandbox html
+          expect( validator.validateInput node ).toBe true
+
+        it 'returns false is it does not a value', ->
+          html = """
+                   <select data-validation="required">
+                     <option value="" selected>Please select something</option>
+                     <option value="foo">Foo</option>
+                   </select>
+                 """
+          node = sandbox html
+          expect( validator.validateInput node ).toBe false
+
     describe 'length validation', ->
       describe 'with only a min attribute', ->
         it 'returns true if the input value is within range', ->

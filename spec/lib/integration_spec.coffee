@@ -9,6 +9,7 @@ describe 'Validator', ->
       formHTML = """
               <form action="javascript:void()">
                 <input data-validation="format:[email]" type="email" value="david.pdrsn@gmail.com">
+                <input type="email" value="david.pdrsn@gmail.com">
                 <input type="submit">
               </form>
              """
@@ -19,6 +20,7 @@ describe 'Validator', ->
       formHTML = """
               <form action="javascript:void()">
                 <input data-validation="format:[email]" type="email" value="invalid email">
+                <input type="email" value="david.pdrsn@gmail.com">
                 <input type="submit">
               </form>
              """

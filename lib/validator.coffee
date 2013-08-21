@@ -117,18 +117,15 @@ class @FormValidator
     }
 
   validateForm: (form) ->
-    fields = form.querySelectorAll 'input, textarea'
+    fields = form.querySelectorAll '[data-validation]'
     validationResults = []
 
-    for field in fields
-      unless field.getAttribute('type') is 'submit'
-        validationResults.push @validateInput field
+    validationResults.push @validateInput field for field in fields
 
-    for result in validationResults
-      if result == false
-        return false
-
-    return true
+    if false in validationResults
+      return false
+    else
+      return true
 
   validateInput: (inputNode) ->
     input = new ValidatableInput inputNode
