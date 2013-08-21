@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+- Fix bugs related to required checkboxes.
+- Add test for required select boxes.
+- Various bug fixes.
+- Minor refactorings.
+
 ## 0.2
 - Big internal rewrite.
 - New folder structure.
