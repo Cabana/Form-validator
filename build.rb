@@ -4,9 +4,9 @@ require 'coffee-script'
 compiler = Closure::Compiler.new(compilation_level: 'SIMPLE_OPTIMIZATIONS')
 
 files = [
-  "src/lib/parser/build/parser.js",
-  "src/validator.coffee",
-  "src/jquery.validator.js"
+  "vendor/parser/build/parser.js",
+  "lib/validator.coffee",
+  "lib/jquery.validator.js"
 ]
 
 js = files.inject '' do |result, js_component|

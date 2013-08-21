@@ -14,11 +14,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/lib/jquery/jquery.min.js',
-      'src/lib/parser/build/parser.js',
-      'src/*.coffee',
+      'vendor/jquery/jquery.min.js',
+      'vendor/parser/build/parser.js',
+      'lib/*.coffee',
       'spec/helpers/*.js',
-      'spec/*_spec.coffee'
+      'spec/lib/*_spec.coffee'
     ],
 
 
