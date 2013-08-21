@@ -165,8 +165,10 @@ class @FormValidator
     @defineValidation 'number', /^\d+$/, 'Invalid'
 
     @defineValidation 'required', (input, data) =>
-      unless /^.+$/.test input.value
-        "Can't be blank"
+      if input.getAttribute('type') is 'checkbox'
+        "Most be checked" unless input.checked
+      else
+        "Can't be blank" unless /^.+$/.test input.value
 
     @defineValidation 'length', (input, data) =>
       new CharacterCountValidation(input.value.length, data.length.min, data.length.max).validate()
