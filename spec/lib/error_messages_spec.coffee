@@ -135,6 +135,16 @@ describe 'Validator', ->
           validator.validateInput node
           expect( node.getAttribute 'data-error-message' ).toBe "Can't be blank"
 
+        describe 'a validation with multiple different error messages', ->
+          it 'can be used to validate an invalid field', ->
+            node = sandbox '<input data-validation="myValidation, required" value="" type="email">'
+
+            validator.defineValidation 'myValidation', (input, data) ->
+              return ['foo', 'bar']
+
+            validator.validateInput node
+            expect( node.getAttribute 'data-error-message' ).toBe "Foo, bar, and can't be blank"
+
     describe 'with custom error messages', ->
       it 'overrides the other error message', ->
         node = sandbox '<input data-validation="format:[email]" data-custom-error-message="custom message" value="invalid email" type="email">'

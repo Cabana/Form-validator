@@ -11,20 +11,20 @@ unless Object.keys
 String::capitalize = ->
   @charAt(0).toUpperCase() + @slice(1)
 
-Array::toSentence = ->
+toSentence = (array) ->
   wordsConnector = ", "
   twoWordsConnector = " and "
   lastWordConnector = ", and "
   sentence = undefined
-  switch @length
+  switch array.length
     when 0
       sentence = ""
     when 1
-      sentence = @[0]
+      sentence = array[0]
     when 2
-      sentence = @[0] + twoWordsConnector + @[1]
+      sentence = array[0] + twoWordsConnector + array[1]
     else
-      sentence = @.slice(0, -1).join(wordsConnector) + lastWordConnector + @[@.length - 1]
+      sentence = array.slice(0, -1).join(wordsConnector) + lastWordConnector + array[array.length - 1]
   sentence
 
 class Errors
@@ -32,7 +32,11 @@ class Errors
     @errors = []
 
   add: (message) ->
-    @errors.push message
+    if message
+      if typeof message is 'string'
+        @errors.push message
+      else
+        @errors.push error for error in message
 
   none: ->
     if @errors.length == 0
@@ -45,7 +49,7 @@ class Errors
       boolean
 
   fullMessages: ->
-    @errors.toSentence().toLowerCase().capitalize()
+    toSentence(@errors).toLowerCase().capitalize()
 
   all: ->
     @errors
@@ -157,8 +161,7 @@ class @FormValidator
     for key in Object.keys validations
       if key != 'format'
         result = @_validations[key].validationHandler(input, validations)
-        if result
-          errors.add result
+        errors.add result
 
   _setupBuiltInValidations: ->
     @defineValidation 'email', /.+@.+\..+/, 'Email is invalid'

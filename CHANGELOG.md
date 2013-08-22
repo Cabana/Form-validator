@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.2.2 (unfinished)
+## 0.3 (unfinished)
 - Support for custom error messages.
 - Focus on first input with errors.
 - Add a `toSentence` method on the `Array` class.
+- Allow custom validations to return an array of strings instead of only one string.
 
 ## 0.2.1
 - Fix bugs related to required checkboxes.
