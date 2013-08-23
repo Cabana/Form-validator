@@ -4,6 +4,8 @@
 - Support for custom error messages.
 - Focus on first input with errors.
 - Allow custom validations to return an array of strings instead of only one string.
+- Add `beforeValidation` and `afterValidation` callbacks to the jquery plugin.
+- Add `ifValid` and `ifInvalid` callbacks to jquery plugin.
 
 ## 0.2.1
 - Fix bugs related to required checkboxes.

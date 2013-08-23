@@ -20,7 +20,24 @@ $(function(){
 
   $('form').validate({
     validator: customValidator,
-    onBlur: true
+
+    onBlur: true,
+
+    beforeValidation: function() {
+      console.log('before');
+    },
+
+    afterValidation: function() {
+      console.log('after');
+    },
+
+    ifValid: function() {
+      console.log('valid');
+    },
+
+    ifInvalid: function() {
+      console.log('invalid');
+    }
   });
 
 });
