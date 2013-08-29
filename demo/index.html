@@ -27,7 +27,7 @@
   </head>
   <body>
 
-    <form action="http://google.com/" method="get">
+    <form data-validate="false" action="http://google.com/" method="get">
 
       <div class="field">
         <label>First name(s):</label>
@@ -79,8 +79,24 @@
         <input type="text">
       </div>
 
+      <div class="field">
+        <label>Rating:</label>
+        <textarea data-validation="required"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Rating:</label>
+        <select data-validation="required">
+          <option value="">Foo</option>
+          <option>Foo</option>
+          <option>Foo</option>
+          <option>Foo</option>
+        </select>
+      </div>
+
       <div class="actions">
-        <input type="submit">
+        <input data-skip-validation type="submit" value="Submit without validation">
+        <input type="submit" value="Submit with validation">
       </div>
 
     </form>

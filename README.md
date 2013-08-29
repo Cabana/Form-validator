@@ -135,6 +135,15 @@ To customize the error messages on an input use a `data-custom-error-message` at
 
 `<input data-validation="format:[email]" data-custom-error-message="My message" type="text">`
 
+## Skipping validation
+If you ever wish to have a button that submits the form without performing any validation you can use a submit button like this:
+
+```html
+<input data-skip-validation type="submit">
+```
+
+This could for example be useful if you needed a back button as part of a bigger flow.
+
 ## Further development
 The validator class is built using a [test driven](http://en.wikipedia.org/wiki/Test-driven_development) style. This simply means that no implementation code was written without having a test of it first. The testing framework used is [jasmine](http://pivotal.github.io/jasmine/).
 

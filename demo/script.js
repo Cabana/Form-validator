@@ -24,11 +24,9 @@ $(function(){
     onBlur: true,
 
     beforeValidation: function() {
-      console.log('before');
     },
 
     afterValidation: function() {
-      console.log('after');
     },
 
     ifValid: function() {

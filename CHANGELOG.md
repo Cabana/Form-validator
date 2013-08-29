@@ -6,6 +6,7 @@
 - Allow custom validations to return an array of strings instead of only one string.
 - Add `beforeValidation` and `afterValidation` callbacks to the jquery plugin.
 - Add `ifValid` and `ifInvalid` callbacks to jquery plugin.
+- Add an optional `data-skip-validation` attribute on the submit button to submit the form without any validation.
 
 ## 0.2.1
 - Fix bugs related to required checkboxes.
