@@ -63,6 +63,7 @@ The plugin comes with a number of different validations built in.
 - `length` - Checks the number of characters in the value. Supports both a min and max attribute.
 - `wordCount` - Same as length but counts words instead of characters. Also supports min and max attributes.
 - `onlyIfChecked` - Input will only get validated if the checkbox with the specified id is checked. See examples below.
+- `onlyIfEmpty` - Input will only get validated if the input with the given id is empty.
 
 ## Building validations
 The built in validations (and your own custom ones) can be combined in many ways to create quite sophisticated validations. All validations live inside a `data-validation` attribute on the input element.
@@ -77,6 +78,7 @@ Here are a few examples:
 <input data-validation="wordCount:[min:2]" type="text">
 <input data-validation="format:[email], allowEmpty" type="text">
 <input data-validation="format:[number], length:[min:10, max:20], onlyIfChecked:myCheckbox" type="text">
+<input data-validation="format:[email], onlyIfEmpty:mySelect" type="text">
 ```
 
 ## More advanced uses
