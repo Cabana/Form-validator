@@ -5,7 +5,15 @@ compiler = Closure::Compiler.new(compilation_level: 'SIMPLE_OPTIMIZATIONS')
 
 files = [
   "vendor/parser/build/parser.js",
-  "lib/validator.coffee",
+
+  'lib/monkey_patches.coffee',
+  'lib/errors.coffee',
+  'lib/validatable_input.coffee',
+  'lib/range_validation.coffee',
+  'lib/character_count_validation.coffee',
+  'lib/word_count_validation.coffee',
+  'lib/validator.coffee',
+
   "lib/jquery.validator.js"
 ]
 

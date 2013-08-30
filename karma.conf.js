@@ -16,7 +16,15 @@ module.exports = function(config) {
     files: [
       'vendor/jquery/jquery.min.js',
       'vendor/parser/build/parser.js',
-      'lib/*.coffee',
+
+      'lib/monkey_patches.coffee',
+      'lib/errors.coffee',
+      'lib/validatable_input.coffee',
+      'lib/range_validation.coffee',
+      'lib/character_count_validation.coffee',
+      'lib/word_count_validation.coffee',
+      'lib/validator.coffee',
+
       'spec/helpers/*.js',
       'spec/lib/*_spec.coffee'
     ],

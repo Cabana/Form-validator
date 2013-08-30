@@ -74,7 +74,7 @@ describe 'Validator', ->
         it 'returns false is it does not a value', ->
           html = """
                    <select data-validation="required" name="foo">
-                     <option value="Pick something" selected>Pick something</option>
+                     <option value="Pick something">Pick something</option>
                      <option value="foo">Foo</option>
                    </select>
                  """
@@ -294,6 +294,98 @@ describe 'Validator', ->
         $('body').append html
         input = $('#input')[0]
         expect( validator.validateInput input ).toBe false
+
+      describe 'with a select field', ->
+        it 'returns true if the other input is not empty no matter what the value of the main input is', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="">Pick something</option>
+                      <option value="foo" selected>Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe true
+
+        it 'returns true if the other input is empty and the main input is valid', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="" selected>Pick something</option>
+                      <option value="foo">Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="valid@email.com" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe true
+
+        it 'returns false if the other input is empty and the main input is invalid', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="" selected>Pick something</option>
+                      <option value="foo">Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="invalid email" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe false
+
+      describe 'with select field where the first option is actually empty even though there is text in it', ->
+        it 'returns true if the other input is not empty no matter what the value of the main input is', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="Pick something">Pick something</option>
+                      <option value="foo" selected>Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe true
+
+        it 'returns true if the other input is empty and the main input is valid', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="Pick something">Pick something</option>
+                      <option value="foo">Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="valid@email.com" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe true
+
+        it 'returns false if the other input is empty and the main input is invalid', ->
+          html = """
+                  <div id="sandbox">
+                    <select id="someId">
+                      <option value="Pick something">Pick something</option>
+                      <option value="foo">Foo</option>
+                    </select>
+                    <input data-validation="format:[email], onlyIfEmpty:someId" value="invalid email" id="input" type="email">
+                  </div>
+                 """
+          nodes = sandbox html
+          $('body').append html
+          input = $('#input')[0]
+          expect( validator.validateInput input ).toBe false
 
     describe 'number format', ->
       it 'returns true if the string contains only numeric values', ->

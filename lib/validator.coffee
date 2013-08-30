@@ -1,110 +1,5 @@
 errors = new Object
 
-unless Object.keys
-  Object.keys = keys = (object) ->
-    buffer = []
-    key = undefined
-    for key of object
-      buffer.push key  if Object::hasOwnProperty.call(object, key)
-    buffer
-
-String::capitalize = ->
-  @charAt(0).toUpperCase() + @slice(1)
-
-toSentence = (array) ->
-  wordsConnector = ", "
-  twoWordsConnector = " and "
-  lastWordConnector = ", and "
-  sentence = undefined
-  switch array.length
-    when 0
-      sentence = ""
-    when 1
-      sentence = array[0]
-    when 2
-      sentence = array[0] + twoWordsConnector + array[1]
-    else
-      sentence = array.slice(0, -1).join(wordsConnector) + lastWordConnector + array[array.length - 1]
-  sentence
-
-class Errors
-  constructor: ->
-    @errors = []
-
-  add: (message) ->
-    if message
-      if typeof message is 'string'
-        @errors.push message
-      else
-        @errors.push error for error in message
-
-  none: ->
-    if @errors.length == 0
-      true
-    else
-      false
-
-  alwaysReturn: (boolean) ->
-    @none = ->
-      boolean
-
-  fullMessages: ->
-    toSentence(@errors).toLowerCase().capitalize()
-
-  all: ->
-    @errors
-
-class ValidatableInput
-  constructor: (input) ->
-    @input = input
-    @customMessage = @input.getAttribute 'data-custom-error-message'
-
-  setupErrorMessage: (fullMessages) ->
-    @input.setAttribute 'data-error-message', @customMessage || fullMessages
-
-  resetErrorMessages: ->
-    @input.removeAttribute 'data-error-message'
-
-  validations: ->
-    @input.getAttribute 'data-validation'
-
-  asHtmlNode: ->
-    @input
-
-class RangeValidation
-  constructor: (length, min, max) ->
-    @length = length
-    @min = min
-    @max = max
-
-  validate: ->
-    if @max and @min and @length not in [@min..@max]
-      @mixedMessage()
-    else if @min and @length < @min
-      @tooShortMessage()
-    else if @max and @length > @max
-      @tooLongMessage()
-
-class CharacterCountValidation extends RangeValidation
-  mixedMessage: ->
-    "Value most be at least #{@min} and maximum #{@max} characters long"
-
-  tooShortMessage: ->
-    "Value most be at least #{@min}"
-
-  tooLongMessage: ->
-    "Value can't be longer than #{@max}"
-
-class WordCountValidation extends RangeValidation
-  mixedMessage: ->
-    "Can't contain less than #{@min} or more than #{@max} words"
-
-  tooShortMessage: ->
-    "Can't contain less than #{@min} words"
-
-  tooLongMessage: ->
-    "Can't contain more than #{@max} words"
-
 class @FormValidator
   constructor: ->
     parser = new Parser
@@ -169,17 +64,10 @@ class @FormValidator
     @defineValidation 'number', /^\d+$/, 'Invalid'
 
     @defineValidation 'required', (input, data) =>
-      if input.nodeName.toLowerCase() is "select"
-        text = input.querySelector("option").text
-        value = input.value
-        if text is value or value is ''
-          return "Can't be blank"
-
+      if new ValidatableInput(input).isEmpty()
+        return "Can't be blank"
       else if input.getAttribute("type") is "checkbox"
         return "Most be checked" unless input.checked
-
-      else
-        return "Can't be blank" unless /^.+$/.test(input.value)
 
     @defineValidation 'length', (input, data) =>
       new CharacterCountValidation(input.value.length, data.length.min, data.length.max).validate()
@@ -200,7 +88,9 @@ class @FormValidator
 
     @defineValidation 'onlyIfEmpty', (input, data) =>
       otherInput = document.getElementById(data.onlyIfEmpty)
-      @_alwaysValidIf /.+/.test(otherInput.value)
+
+      unless new ValidatableInput(otherInput).isEmpty()
+        @_alwaysValidIf true
 
   _alwaysValidIf: (condition) ->
     errors.alwaysReturn [] if condition
