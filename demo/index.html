@@ -9,6 +9,7 @@
     <!-- <script src="../src/lib/parser/src/parser.js"></script> -->
     <!-- <script src="../src/validator.js"></script> -->
     <!-- <script src="../src/jquery.validator.js"></script> -->
+    <script src="easy_date.js"></script>
     <script src="../build/jquery.validator.js"></script>
 
     <script src="script.js"></script>
@@ -27,71 +28,21 @@
   </head>
   <body>
 
-    <form data-validate="false" action="http://google.com/" method="get">
+    <form id="mainform" action="http://google.com/" method="get">
 
       <div class="field">
-        <label>First name(s):</label>
-        <input data-validation="wordCount:[min:1]" type="text">
-      </div>
-
-      <div class="field">
-        <label>Last name:</label>
-        <input data-validation="wordCount:[min:1, max:1]" type="text">
-      </div>
-
-      <div class="field">
-        <label>Email:</label>
-        <input data-validation="format:[email]" type="text">
-      </div>
-
-      <div class="field">
-        <label>Password:</label>
-        <input data-validation="length:[min:3]" type="text">
-      </div>
-
-      <div class="field">
-        <label>CPR:</label>
-        <input data-validation="format:[cpr], required" type="text">
-      </div>
-
-      <div class="field">
-        <label>Zip code:</label>
-        <input data-validation="format:[zip], required" type="text">
+        <label>Rating:</label>
+        <select id="someId">
+          <option value="Pick something">Pick something</option>
+          <option value="foo">Foo</option>
+          <option value="foo">Foo</option>
+          <option value="foo">Foo</option>
+        </select>
       </div>
 
       <div class="field">
         <label>Some required field:</label>
-        <input data-validation="newRequired" type="text">
-      </div>
-
-      <div class="field">
-        <label>Danish zip code:</label>
-        <input data-validation="exactLength:4" type="text">
-      </div>
-
-      <div class="field">
-        <label>Rating:</label>
-        <input type="checkbox" id="foobar" name="somecheckbox" data-validation="required">
-      </div>
-
-      <div class="field">
-        <label>Rating:</label>
-        <input type="text">
-      </div>
-
-      <div class="field">
-        <label>Rating:</label>
-        <textarea data-validation="required"></textarea>
-      </div>
-
-      <div class="field">
-        <label>Rating:</label>
-        <select data-validation="required">
-          <option value="">Foo</option>
-          <option>Foo</option>
-          <option>Foo</option>
-          <option>Foo</option>
-        </select>
+        <input data-validation="length:[min:3, max:10]" type="text">
       </div>
 
       <div class="actions">
