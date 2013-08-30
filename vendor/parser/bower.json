@@ -1,9 +1,0 @@
-{
-  "name": "parser",
-  "version": "0.0.0",
-  "commit": "9c83edaefc56ae317635fa5df5f236f89642a7be",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Cabana/Parser.git"
-  }
-}

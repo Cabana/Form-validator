@@ -1,0 +1,13 @@
+{
+  "name": "parser",
+  "homepage": "https://github.com/Cabana/Parser",
+  "_release": "master",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9c83edaefc56ae317635fa5df5f236f89642a7be"
+  },
+  "_source": "https://github.com/Cabana/Parser.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/Cabana/Parser.git"
+}
