@@ -191,6 +191,9 @@ class @FormValidator
     @defineValidation 'onlyIfChecked', (input, data) =>
       @_alwaysValidIf !document.getElementById(data.onlyIfChecked).checked
 
+    @defineValidation 'onlyIfEmpty', (input, data) =>
+      @_alwaysValidIf /.+/.test(document.getElementById(data.onlyIfEmpty).value)
+
   _alwaysValidIf: (condition) ->
       errors.alwaysReturn [] if condition
 
