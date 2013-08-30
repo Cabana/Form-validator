@@ -7,7 +7,7 @@ unless Object.keys
     buffer
 
 String::capitalize = ->
-  @charAt(0).toUpperCase() + @slice(1)
+  this.charAt(0).toUpperCase() + this.slice(1)
 
 window.toSentence = (array) ->
   wordsConnector = ", "

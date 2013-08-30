@@ -1,9 +1,9 @@
-class @WordCountValidation extends RangeValidation
+class this.WordCountValidation extends RangeValidation
   mixedMessage: ->
-    "Can't contain less than #{@min} or more than #{@max} words"
+    "Can't contain less than #{this.min} or more than #{this.max} words"
 
   tooShortMessage: ->
-    "Can't contain less than #{@min} words"
+    "Can't contain less than #{this.min} words"
 
   tooLongMessage: ->
-    "Can't contain more than #{@max} words"
+    "Can't contain more than #{this.max} words"

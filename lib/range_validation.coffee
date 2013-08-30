@@ -1,13 +1,13 @@
-class @RangeValidation
+class this.RangeValidation
   constructor: (length, min, max) ->
-    @length = length
-    @min = min
-    @max = max
+    this.length = length
+    this.min = min
+    this.max = max
 
   validate: ->
-    if @max and @min and @length not in [@min..@max]
-      @mixedMessage()
-    else if @min and @length < @min
-      @tooShortMessage()
-    else if @max and @length > @max
-      @tooLongMessage()
+    if this.max and this.min and this.length not in [this.min..this.max]
+      this.mixedMessage()
+    else if this.min and this.length < this.min
+      this.tooShortMessage()
+    else if this.max and this.length > this.max
+      this.tooLongMessage()

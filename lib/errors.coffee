@@ -1,27 +1,31 @@
-class @Errors
+class this.Errors
   constructor: ->
-    @errors = []
+    this.errors = []
 
   add: (message) ->
     if message
       if typeof message is 'string'
-        @errors.push message
+        this.errors.push message
       else
-        @errors.push error for error in message
+        this.errors.push error for error in message
 
   none: ->
-    if @errors.length == 0
+    if this.errors.length == 0
       true
     else
       false
 
-  alwaysReturn: (boolean) ->
-    @none = ->
-      boolean
-
   fullMessages: ->
-    toSentence(@errors).toLowerCase().capitalize()
+    toSentence(this.errors).toLowerCase().capitalize()
 
   all: ->
-    @errors
+    this.errors
 
+  alwaysReturn: (boolean) ->
+    this.none = -> boolean
+
+  alwaysNoneIf: (condition) ->
+    this.alwaysReturn [] if condition
+
+  alwaysNone: ->
+    this.alwaysReturn []

@@ -1,27 +1,27 @@
-class @ValidatableInput
+class this.InputWithValidations
   constructor: (input) ->
-    @input = input
-    @customMessage = @input.getAttribute 'data-custom-error-message'
+    this.input = input
+    this.customMessage = this.input.getAttribute 'data-custom-error-message'
 
   setupErrorMessage: (fullMessages) ->
-    @input.setAttribute 'data-error-message', @customMessage || fullMessages
+    this.input.setAttribute 'data-error-message', this.customMessage || fullMessages
 
   resetErrorMessages: ->
-    @input.removeAttribute 'data-error-message'
+    this.input.removeAttribute 'data-error-message'
 
   validations: ->
-    @input.getAttribute 'data-validation'
+    this.input.getAttribute 'data-validation'
 
   asHtmlNode: ->
-    @input
+    this.input
 
   isEmpty: ->
-    if @input.nodeName.toLowerCase() is "select"
-      if @input.querySelector("option").text is @input.value or @input.value is ''
+    if this.input.nodeName.toLowerCase() is "select"
+      if this.input.querySelector("option").text is this.input.value or this.input.value is ''
         true
       else
         false
-    else if !/^.+$/.test(@input.value)
+    else if !/^.+$/.test(this.input.value)
       true
     else
       false

@@ -1,9 +1,9 @@
-class @CharacterCountValidation extends RangeValidation
+class this.CharacterCountValidation extends RangeValidation
   mixedMessage: ->
-    "Value most be at least #{@min} and maximum #{@max} characters long"
+    "Value most be at least #{this.min} and maximum #{this.max} characters long"
 
   tooShortMessage: ->
-    "Value most be at least #{@min}"
+    "Value most be at least #{this.min}"
 
   tooLongMessage: ->
-    "Value can't be longer than #{@max}"
+    "Value can't be longer than #{this.max}"
