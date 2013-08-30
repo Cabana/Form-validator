@@ -60,6 +60,27 @@ describe 'Validator', ->
           node = sandbox html
           expect( validator.validateInput node ).toBe false
 
+      describe 'with a select box where the first field is not empty but still invalid', ->
+        it 'returns true is it has a value', ->
+          html = """
+                   <select data-validation="required" name="foo">
+                     <option value="Pick something">Pick something</option>
+                     <option value="foo" selected>Foo</option>
+                   </select>
+                 """
+          node = sandbox html
+          expect( validator.validateInput node ).toBe true
+
+        it 'returns false is it does not a value', ->
+          html = """
+                   <select data-validation="required" name="foo">
+                     <option value="Pick something" selected>Pick something</option>
+                     <option value="foo">Foo</option>
+                   </select>
+                 """
+          node = sandbox html
+          expect( validator.validateInput node ).toBe false
+
       describe 'with a checkbox', ->
         it 'returns true is it is checked', ->
           node = sandbox '<input data-validation="required" type="checkbox" checked>'
@@ -241,11 +262,7 @@ describe 'Validator', ->
       it 'returns true if the other input is not empty no matter what the value of the main input is', ->
         html = """
                 <div id="sandbox">
-                  <select id="someId">
-                    <option value="">Pick something</option>
-                    <option value="foo" selected>Foo</option>
-                    <option value="foo">Foo</option>
-                  </select>
+                  <input id="someId" value="foo" type="text">
                   <input data-validation="format:[email], onlyIfEmpty:someId" value="" id="input" type="email">
                 </div>
                """
@@ -257,11 +274,7 @@ describe 'Validator', ->
       it 'returns true if the other input is empty and the main input is valid', ->
         html = """
                 <div id="sandbox">
-                  <select id="someId">
-                    <option value="" selected>Pick something</option>
-                    <option value="foo">Foo</option>
-                    <option value="foo">Foo</option>
-                  </select>
+                  <input id="someId" value="" type="text">
                   <input data-validation="format:[email], onlyIfEmpty:someId" value="valid@email.com" id="input" type="email">
                 </div>
                """
@@ -273,11 +286,7 @@ describe 'Validator', ->
       it 'returns false if the other input is empty and the main input is invalid', ->
         html = """
                 <div id="sandbox">
-                  <select id="someId">
-                    <option value="" selected>Pick something</option>
-                    <option value="foo">Foo</option>
-                    <option value="foo">Foo</option>
-                  </select>
+                  <input id="someId" value="" type="text">
                   <input data-validation="format:[email], onlyIfEmpty:someId" value="invalid email" id="input" type="email">
                 </div>
                """

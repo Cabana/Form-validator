@@ -169,10 +169,17 @@ class @FormValidator
     @defineValidation 'number', /^\d+$/, 'Invalid'
 
     @defineValidation 'required', (input, data) =>
-      if input.getAttribute('type') is 'checkbox'
-        "Most be checked" unless input.checked
+      if input.nodeName.toLowerCase() is "select"
+        text = input.querySelector("option").text
+        value = input.value
+        if text is value or value is ''
+          return "Can't be blank"
+
+      else if input.getAttribute("type") is "checkbox"
+        return "Most be checked" unless input.checked
+
       else
-        "Can't be blank" unless /^.+$/.test input.value
+        return "Can't be blank" unless /^.+$/.test(input.value)
 
     @defineValidation 'length', (input, data) =>
       new CharacterCountValidation(input.value.length, data.length.min, data.length.max).validate()
@@ -192,10 +199,11 @@ class @FormValidator
       @_alwaysValidIf !document.getElementById(data.onlyIfChecked).checked
 
     @defineValidation 'onlyIfEmpty', (input, data) =>
-      @_alwaysValidIf /.+/.test(document.getElementById(data.onlyIfEmpty).value)
+      otherInput = document.getElementById(data.onlyIfEmpty)
+      @_alwaysValidIf /.+/.test(otherInput.value)
 
   _alwaysValidIf: (condition) ->
-      errors.alwaysReturn [] if condition
+    errors.alwaysReturn [] if condition
 
   _generateValidations: (string) ->
     @parser.parse string
