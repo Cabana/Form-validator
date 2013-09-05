@@ -31,18 +31,8 @@
     <form id="mainform" action="http://google.com/" method="get">
 
       <div class="field">
-        <label>Name:</label>
-        <select id="someId">
-          <option value="Pick something">Pick something</option>
-          <option value="Foo">Foo</option>
-          <option value="Foo">Foo</option>
-          <option value="Foo">Foo</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Some required field:</label>
-        <input data-validation="format:[email], onlyIfEmpty:someId" type="text">
+        <label>Phone:</label>
+        <input type="text" data-validation="format:[tel], required">
       </div>
 
       <div class="actions">

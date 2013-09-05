@@ -57,7 +57,7 @@ class this.FormValidator
 
   _setupBuiltInValidations: ->
     this.defineValidation 'email', /.+@.+\..+/, 'Email is invalid'
-    this.defineValidation 'tel', /\d{8}/, 'Telephone number is invalid'
+    this.defineValidation 'tel', /^\d{8}$/, 'Telephone number is invalid'
     this.defineValidation 'number', /^\d+$/, 'Invalid'
 
     this.defineValidation 'required', (input, data) =>
