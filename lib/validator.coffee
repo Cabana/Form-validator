@@ -39,6 +39,14 @@ class this.FormValidator
       return true
     else
       input.setupErrorMessage errors.fullMessages()
+
+      if validations.group
+        group = validations.group
+        elementsInGroup = document.querySelectorAll('[data-validation*="group:' + group + '"]')
+        elementsInGroupWithErrors = document.querySelectorAll('[data-validation*="group:' + group + '"][data-error-message]')
+        if elementsInGroup.length != elementsInGroupWithErrors.length
+          return true
+
       return false
 
   _validations: {}
@@ -86,6 +94,8 @@ class this.FormValidator
     this.defineValidation 'onlyIfEmpty', (input, data) =>
       unless new InputWithValidations(document.getElementById(data.onlyIfEmpty)).isEmpty()
         errors.alwaysNone()
+
+    this.defineValidation 'group', (input, data) =>
 
   _generateValidations: (string) ->
     this.parser.parse string

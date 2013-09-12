@@ -396,6 +396,21 @@ describe 'Validator', ->
         node = sandbox '<input data-validation="format:[number]" value="1f23" type="email">'
         expect( validator.validateInput node ).toBe false
 
+    describe 'group', ->
+      it 'returns true if one of the inputs are valid', ->
+        console.log '----------'
+        html = """
+                <div id="sandbox">
+                  <input data-validation="required, group:name" type="text" id="input">
+                  <input data-validation="format:[email], group:name" value="valid@email.com" type="email">
+                </div>
+               """
+        nodes = sandbox html
+        $('body').append html
+        input = $('#input')[0]
+        expect( validator.validateInput input ).toBe true
+        console.log '----------'
+
     describe 'with a custom validator', ->
       describe 'a format validation', ->
         it 'can be used to validate a valid field', ->
