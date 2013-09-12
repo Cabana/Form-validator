@@ -2,10 +2,6 @@ errors = new Object
 
 class this.FormValidator
   constructor: ->
-    parser = new Parser
-
-    this.parser = parser
-
     this._setupBuiltInValidations()
 
   defineValidation: (name, validatorFunction, errorMessage) ->
@@ -27,11 +23,10 @@ class this.FormValidator
   validateInput: (inputNode) ->
     input = new InputWithValidations inputNode
 
-    validations = this._generateValidations input.validations()
     errors = new Errors
 
-    this._performBuiltinValidations(input.asHtmlNode(), validations)
-    this._performFormatValidation(input.asHtmlNode(), validations.format)
+    this._performBuiltinValidations(input.asHtmlNode(), input.validations())
+    this._performFormatValidation(input.asHtmlNode(), input.validations().format)
 
     input.resetErrorMessages()
 
@@ -40,13 +35,9 @@ class this.FormValidator
     else
       input.setupErrorMessage errors.fullMessages()
 
-      if validations.group
-        group = validations.group
-        elementsInGroup = document.querySelectorAll('[data-validation*="group:' + group + '"]')
-        elementsInGroupWithErrors = document.querySelectorAll('[data-validation*="group:' + group + '"][data-error-message]')
-        if elementsInGroup.length != elementsInGroupWithErrors.length
-          return true
-
+      # if input.isInGroup() and input.group.containsValidFields()
+      #   return true
+      # else
       return false
 
   _validations: {}
@@ -96,6 +87,3 @@ class this.FormValidator
         errors.alwaysNone()
 
     this.defineValidation 'group', (input, data) =>
-
-  _generateValidations: (string) ->
-    this.parser.parse string
