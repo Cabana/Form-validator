@@ -16,13 +16,19 @@ class this.InputWithValidations
     this.input.removeAttribute 'data-error-message'
 
   validations: ->
-    this.parser.parse this.input.getAttribute('data-validation')
+    if this.input.getAttribute('data-validation')
+      this.parser.parse this.input.getAttribute('data-validation')
+    else
+      {}
 
   asHtmlNode: ->
     this.input
 
   isInGroup: ->
-    this.validations().group
+    if this.validations().group
+      true
+    else
+      false
 
   groupName: ->
     this.validations().group
@@ -42,8 +48,14 @@ class Group
   constructor: (name) ->
     this.name = name
 
+  fields: ->
+    document.querySelectorAll('[data-validation*="group:' + this.name + '"]')
+
+  invalidFields: ->
+    document.querySelectorAll('[data-validation*="group:' + this.name + '"][data-error-message]')
+
+  validFields: ->
+    document.querySelectorAll('[data-validation*="group:' + this.name + '"]:not([data-error-message])')
+
   containsValidFields: ->
-    elementsInGroup = document.querySelectorAll('[data-validation*="group:' + this.name + '"]')
-    elementsInGroupWithErrors = document.querySelectorAll('[data-validation*="group:' + this.name + '"][data-error-message]')
-    if elementsInGroup.length != elementsInGroupWithErrors.length
-      return true
+    this.fields().length != this.invalidFields().length

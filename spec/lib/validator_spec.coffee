@@ -4,6 +4,9 @@ describe 'Validator', ->
   beforeEach ->
     validator = new FormValidator
 
+  afterEach ->
+    $('#sandbox').html ''
+
   describe '#validateInput', ->
     describe 'format validation', ->
       describe 'email', ->
@@ -398,18 +401,28 @@ describe 'Validator', ->
 
     describe 'group', ->
       it 'returns true if one of the inputs are valid', ->
-        console.log '----------'
-        html = """
-                <div id="sandbox">
-                  <input data-validation="required, group:name" type="text" id="input">
-                  <input data-validation="format:[email], group:name" value="valid@email.com" type="email">
-                </div>
+        formHtml = """
+                <form action="javascript:void()">
+                  <input data-validation="required, group:groupName" type="text" id="input1">
+                  <input data-validation="format:[email], group:groupName" value="valid@email.com" id="input2" type="email">
+                  <input type="submit">
+                </form>
                """
-        nodes = sandbox html
-        $('body').append html
-        input = $('#input')[0]
-        expect( validator.validateInput input ).toBe true
-        console.log '----------'
+        formNode = sandbox formHtml
+        $('body').append formNode
+        expect( validator.validateForm formNode ).toBe true
+
+      it 'returns false if all the inputs are invalid', ->
+        formHtml = """
+                <form action="javascript:void()">
+                  <input data-validation="required, group:name" type="text" id="input1">
+                  <input data-validation="format:[email], group:name" id="input2" type="email">
+                  <input type="submit">
+                </form>
+               """
+        formNode = sandbox formHtml
+        $('body').append formNode
+        expect( validator.validateForm formNode ).toBe false
 
     describe 'with a custom validator', ->
       describe 'a format validation', ->

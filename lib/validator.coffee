@@ -11,14 +11,25 @@ class this.FormValidator
 
   validateForm: (form) ->
     fields = form.querySelectorAll '[data-validation]'
-    validationResults = []
 
-    validationResults.push this.validateInput field for field in fields
+    validationResults = []
+    for field in fields
+      this.validateInput field
+
+    for field in fields
+      input = new InputWithValidations field
+      if input.isInGroup() and input.group.containsValidFields()
+        input.input.removeAttribute 'data-error-message'
+
+      if field.hasAttribute 'data-error-message'
+        validationResults.push false
+      else
+        validationResults.push true
 
     if false in validationResults
-      return false
+      false
     else
-      return true
+      true
 
   validateInput: (inputNode) ->
     input = new InputWithValidations inputNode
@@ -31,14 +42,10 @@ class this.FormValidator
     input.resetErrorMessages()
 
     if errors.none()
-      return true
+      true
     else
       input.setupErrorMessage errors.fullMessages()
-
-      # if input.isInGroup() and input.group.containsValidFields()
-      #   return true
-      # else
-      return false
+      false
 
   _validations: {}
 
