@@ -64,6 +64,7 @@ The plugin comes with a number of different validations built in.
 - `wordCount` - Same as length but counts words instead of characters. Also supports min and max attributes.
 - `onlyIfChecked` - Input will only get validated if the checkbox with the specified id is checked. See examples below.
 - `onlyIfEmpty` - Input will only get validated if the input with the given id is empty.
+- `group` - If you specify a group, only one input within that group has to be valid in order for all inputs within the group to be valid.
 
 ## Building validations
 The built in validations (and your own custom ones) can be combined in many ways to create quite sophisticated validations. All validations live inside a `data-validation` attribute on the input element.
