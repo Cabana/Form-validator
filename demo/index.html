@@ -31,8 +31,26 @@
     <form id="mainform" action="http://google.com/" method="get">
 
       <div class="field">
-        <label>Phone:</label>
-        <input type="text" data-validation="format:[tel], required">
+        <input id="yes" type="radio" name="foo" checked>Ja<br>
+        <input id="no" type="radio" name="foo">Nej
+      </div>
+
+      <div class="field">
+        <select data-validation="required, onlyIfChecked:yes, group:name">
+          <option value="">Pick something</option>
+          <option value="foo">foo</option>
+          <option value="bar">bar</option>
+        </select>
+      </div>
+
+      <div class="field">
+        Tidligere arbejdsgiver
+        <input data-validation="required, onlyIfChecked:yes, group:name" type="text">
+      </div>
+
+      <div class="field">
+        Hvilket aar
+        <input data-validation="yearRange:[min:1900, max:currentYear]" type="text">
       </div>
 
       <div class="actions">

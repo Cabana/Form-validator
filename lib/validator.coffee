@@ -13,8 +13,7 @@ class this.FormValidator
     fields = form.querySelectorAll '[data-validation]'
 
     validationResults = []
-    for field in fields
-      this.validateInput field
+    this.validateInput field for field in fields
 
     for field in fields
       input = new InputWithValidations field

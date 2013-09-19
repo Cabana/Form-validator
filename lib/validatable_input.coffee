@@ -43,19 +43,3 @@ class this.InputWithValidations
       true
     else
       false
-
-class Group
-  constructor: (name) ->
-    this.name = name
-
-  fields: ->
-    document.querySelectorAll('[data-validation*="group:' + this.name + '"]')
-
-  invalidFields: ->
-    document.querySelectorAll('[data-validation*="group:' + this.name + '"][data-error-message]')
-
-  validFields: ->
-    document.querySelectorAll('[data-validation*="group:' + this.name + '"]:not([data-error-message])')
-
-  containsValidFields: ->
-    this.fields().length != this.invalidFields().length

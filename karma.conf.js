@@ -19,6 +19,7 @@ module.exports = function(config) {
 
       'lib/monkey_patches.coffee',
       'lib/errors.coffee',
+      'lib/group.coffee',
       'lib/validatable_input.coffee',
       'lib/range_validation.coffee',
       'lib/character_count_validation.coffee',
@@ -55,7 +56,7 @@ module.exports = function(config) {
 
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
 
     // Start these browsers, currently available:
