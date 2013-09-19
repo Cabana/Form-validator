@@ -82,6 +82,22 @@ Here are a few examples:
 <input data-validation="format:[email], onlyIfEmpty:mySelect" type="text">
 ```
 
+## Groups
+Groups are used when you have a group of fields where only one of those fields need to be valid for the whole group to be valid. This is often useful when making select fields. Here is an example of how to use it:
+
+```html
+<select data-validation="required, group:someGroup">
+  <option>Pick something</option>
+  <option value="foo">Foo</option>
+  <option value="bar">bar</option>
+</select>
+
+If choice wasn't in the dropdown type it here
+<input data-validation="required, group:someGroup" type="text">
+```
+
+Groups can ofcourse still be combined with all the previous validations.
+
 ## More advanced uses
 The plugin itself is quite simple. All it does is validate each input using a validator class. This validator class handles all the regexp matching and generating error messages. So all the jQuery plugin has to do is handle events, add the error messages to the DOM, and add classes to the inputs that weren't valid.
 
