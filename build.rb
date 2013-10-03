@@ -8,6 +8,7 @@ files = [
 
   'lib/monkey_patches.coffee',
   'lib/errors.coffee',
+  'lib/group.coffee',
   'lib/validatable_input.coffee',
   'lib/range_validation.coffee',
   'lib/character_count_validation.coffee',

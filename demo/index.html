@@ -31,20 +31,21 @@
     <form id="mainform" action="http://google.com/" method="get">
 
       <div class="field">
+        Tidligere arbejdsgiver?<br>
         <input id="yes" type="radio" name="foo" checked>Ja<br>
         <input id="no" type="radio" name="foo">Nej
       </div>
 
       <div class="field">
         <select data-validation="required, onlyIfChecked:yes, group:name">
-          <option value="">Pick something</option>
+          <option value="">Pick someone</option>
           <option value="foo">foo</option>
           <option value="bar">bar</option>
         </select>
       </div>
 
       <div class="field">
-        Tidligere arbejdsgiver
+        Noget andet
         <input data-validation="required, onlyIfChecked:yes, group:name" type="text">
       </div>
 
@@ -54,7 +55,7 @@
       </div>
 
       <div class="actions">
-        <input data-skip-validation type="submit" value="Submit without validation">
+        <!-- <input data-skip-validation type="submit" value="Submit without validation"> -->
         <input type="submit" value="Submit with validation">
       </div>
 
