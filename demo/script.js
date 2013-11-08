@@ -107,6 +107,7 @@ $(function(){
 
   $('#mainform').validate({
     validator: validator
+   ,formWrapperSelector: '.form-container'
   });
 
 });

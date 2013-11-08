@@ -30,32 +30,20 @@
 
     <form id="mainform" action="http://google.com/" method="get">
 
-      <div class="field">
-        Tidligere arbejdsgiver?<br>
-        <input id="yes" type="radio" name="foo" checked>Ja<br>
-        <input id="no" type="radio" name="foo">Nej
+      <div class="form-container">
+        One<br>
+        <input type="text" data-validation="required"><br>
+        <input type="submit" value="Submit with validation">
       </div>
 
-      <div class="field">
-        <select data-validation="required, onlyIfChecked:yes, group:name">
-          <option value="">Pick someone</option>
-          <option value="foo">foo</option>
-          <option value="bar">bar</option>
-        </select>
-      </div>
+      <br>
 
-      <div class="field">
-        Noget andet
-        <input data-validation="required, onlyIfChecked:yes, group:name" type="text">
-      </div>
-
-      <div class="field">
-        Hvilket aar
-        <input data-validation="yearRange:[min:1900, max:currentYear]" type="text">
-      </div>
-
-      <div class="actions">
-        <!-- <input data-skip-validation type="submit" value="Submit without validation"> -->
+      <div class="form-container">
+        Two<br>
+        <input type="text" data-validation="required"><br>
+        <input type="text" data-validation="required"><br>
+        <input type="text" data-validation="required"><br>
+        <input type="text" data-validation="required"><br>
         <input type="submit" value="Submit with validation">
       </div>
 
