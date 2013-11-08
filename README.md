@@ -144,7 +144,9 @@ $('form').validate({
 
   validator: [object], // custom validator to use
 
-  onBlur: [boolean] // whether or not to validate inputs on blur
+  onBlur: [boolean], // whether or not to validate inputs on blur
+
+  formWrapperSelector: [string] // If the whole page is wrapped in one form element but can still contain several individual forms, use this option for only validating the fields within the current form. It should contain a selector (fx '.form-container') that each form is wrapped in. Default is undefined, this will validate all fields within the entire form.
 
 });
 ```
