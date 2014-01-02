@@ -8,7 +8,8 @@
 - Add `beforeValidation` and `afterValidation` callbacks to the jquery plugin.
 - Add `ifValid` and `ifInvalid` callbacks to jquery plugin.
 - Add an optional `data-skip-validation` attribute on the submit button to submit the form without any validation.
-- Add `onlyIfEmpty` validation.
+- Add validation groups.
+- Add a few more built-in validations.
 
 ## 0.2.1
 - Fix bugs related to required checkboxes.
