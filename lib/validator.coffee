@@ -23,10 +23,6 @@ class this.FormValidator
       this.validateInput field
 
     for field in fields
-      input = new InputWithValidations field
-      if input.isInGroup() and input.group.containsValidFields()
-        input.input.removeAttribute 'data-error-message'
-
       if field.hasAttribute 'data-error-message'
         validationResults.push false
       else
