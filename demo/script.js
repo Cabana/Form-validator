@@ -1,50 +1,38 @@
 var validator = new FormValidator();
 
-validator.defineValidation('date', function(input, data){
+validator.defineValidation('cpr', function(input, data) {
   var errors = [];
+
+  // remove dashes
+  $(input).val($(input).val().replace(/-/g, ''));
+
+  // remove spaces
+  $(input).val($(input).val().replace(/ /g, ''));
+
+  // that it is ten numbers
+  if (!/^\d{10}$/.test(input.value)) {
+    errors.push('Invalid cpr number');
+  }
 
   var val = $(input).val();
 
-  if (/^\d{6}.*/.test(val)) {
-    val = split(val, /(\d{6}).*/).join('');
-  }
-
+  var shortHandDate = split(val, /(\d{6}).*/).join('');
   try {
-    var date = new EasyDate(val);
+    var date = new EasyDate(shortHandDate);
 
-    if (date.yearsAgo() < data.date.minYearsAgo) {
-      errors.push('You must be at least ' + data.date.minYearsAgo + ' years old');
+    // that the person is 13 or older
+    if (date.yearsAgo() <= 13) {
+      errors.push('You must be at least 13 years old');
     }
 
-    if (date.yearsAgo() > data.date.maxYearsAgo) {
-      errors.push('Date must be no more than ' + data.date.maxYearsAgo + ' years ago');
-    }
-
-    if (data.date.allowFuture === false && date.isFuture()) {
+    // that the date is not in the future
+    if (date.isFuture()) {
       errors.push('Date cannot be in future');
-    }
-
-    if (data.date.allowPast === false && date.isPast()) {
-      errors.push('Date cannot be in the past');
     }
   }
   // that the date is valid
   catch(e) {
     errors.push('Invalid date');
-  }
-
-  return errors;
-});
-
-validator.defineValidation('cpr', function(input, data) {
-  var errors = [];
-
-  $(input).val($(input).val().replace(/-/g, ''));
-  $(input).val($(input).val().replace(/ /g, ''));
-
-  // that it are ten numbers
-  if (!/^\d{10}$/.test(input.value)) {
-    errors.push('Invalid cpr number');
   }
 
   return errors;
@@ -107,7 +95,6 @@ $(function(){
 
   $('#mainform').validate({
     validator: validator
-   ,formWrapperSelector: '.form-container'
   });
 
 });
