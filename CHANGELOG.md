@@ -10,6 +10,7 @@
 - Add an optional `data-skip-validation` attribute on the submit button to submit the form without any validation.
 - Add validation groups.
 - Add a few more built-in validations.
+- Include version number on the jquery plugin.
 
 ## 0.2.1
 - Fix bugs related to required checkboxes.
