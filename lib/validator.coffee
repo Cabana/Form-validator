@@ -1,5 +1,11 @@
 errors = new Object
 
+unless NodeList::toArray
+  NodeList::toArray = ->
+    arr = []
+    `for(var i = 0, n; n = this[i]; ++i) arr.push(n);`
+    arr
+
 class this.FormValidator
   constructor: ->
     this._setupBuiltInValidations()
@@ -13,7 +19,8 @@ class this.FormValidator
     fields = form.querySelectorAll '[data-validation]'
 
     validationResults = []
-    this.validateInput field for field in fields
+    for field in fields
+      this.validateInput field
 
     for field in fields
       input = new InputWithValidations field
@@ -32,11 +39,17 @@ class this.FormValidator
 
   validateInput: (inputNode) ->
     input = new InputWithValidations inputNode
-
     errors = new Errors
 
-    this._performBuiltinValidations(input.asHtmlNode(), input.validations())
-    this._performFormatValidation(input.asHtmlNode(), input.validations().format)
+    if input.isInGroup()
+      inputsInGroup = input.group.fields().toArray().map (node) -> new InputWithValidations(node).withoutGroup().asHtmlNode()
+      validationResults = inputsInGroup.map (node) => this.validateInput(node)
+
+      if true in validationResults
+        return true
+    else
+      this._performBuiltinValidations(input.asHtmlNode(), input.validations())
+      this._performFormatValidation(input.asHtmlNode(), input.validations().format)
 
     input.resetErrorMessages()
 

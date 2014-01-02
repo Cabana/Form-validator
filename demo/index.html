@@ -30,39 +30,17 @@
 
     <form id="mainform" action="http://google.com/" method="get">
 
-      <p>
-        <label>Har du tidligere været medlem af en a-kasse?</label><br>
+      <div class="field">
+        <input autofocus value="foo" data-validation="required, group:name">
+      </div>
 
-        <input type="radio" name="foo" checked id="earlier"><label>Ja</label>
-        <input type="radio" name="foo"><label>Nej</label>
-      </p>
+      <div class="field">
+        <input data-validation="required, group:name">
+      </div>
 
-      <p>
-        <label>Hvis ja, hvilken a-kasse har du senest været medlem af? *</label><br>
-
-        <select data-validation="required, onlyIfChecked:earlier, group:name" id="select">
-          <option>Vælg fra listen</option>
-          <option value="foo">Foo</option>
-          <option value="foo">Foo</option>
-          <option value="foo">Foo</option>
-          <option value="foo">Foo</option>
-          <option value="foo">Foo</option>
-        </select>
-      </p>
-
-      <p>
-        <label>Hvis din tidligere a-kasse ikke er på listen, så skriv den her: *</label><br>
-
-        <input type="text" name="foo" data-validation="required, group:name, onlyIfChecked:earlier, onlyIfEmpty:select">
-      </p>
-
-      <p>
-        <label>Hvilket år har du sidst været medlem af en a-kasse?</label><br>
-
-        <input type="text">
-      </p>
-
-      <input type="submit">
+      <div class="actions">
+        <input type="submit" value="Submit with validation">
+      </div>
 
     </form>
 

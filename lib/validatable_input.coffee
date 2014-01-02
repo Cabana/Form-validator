@@ -25,10 +25,14 @@ class this.InputWithValidations
     this.input
 
   isInGroup: ->
-    if this.validations().group
-      true
-    else
-      false
+    this.validations().group
+
+  withoutGroup: ->
+    clone = this.input.cloneNode(false)
+    validationAttribute = clone.getAttribute("data-validation")
+    validationAttributeWithoutGroups = validationAttribute.replace(' ', '').split(",").filter((e) -> !/group:/.test(e)).join(",")
+    clone.setAttribute("data-validation", validationAttributeWithoutGroups)
+    new InputWithValidations(clone)
 
   groupName: ->
     this.validations().group

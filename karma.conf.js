@@ -16,6 +16,7 @@ module.exports = function(config) {
     files: [
       'vendor/jquery/jquery.min.js',
       'vendor/parser/build/parser.js',
+      'vendor/jasmine-only.js',
 
       'lib/monkey_patches.coffee',
       'lib/errors.coffee',
@@ -68,7 +69,6 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: ['Chrome', 'Safari', 'Firefox', 'Opera'],
-    // browsers: ['Chrome'],
 
 
     // If browser does not capture in given timeout [ms], kill it

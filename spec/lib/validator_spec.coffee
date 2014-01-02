@@ -403,26 +403,33 @@ describe 'Validator', ->
       it 'returns true if one of the inputs are valid', ->
         formHtml = """
                 <form action="javascript:void()">
-                  <input data-validation="required, group:groupName" type="text" id="input1">
-                  <input data-validation="format:[email], group:groupName" value="valid@email.com" id="input2" type="email">
+                  <input id="valid" data-validation="required, group:name" value="foo">
+                  <input id="invalid" data-validation="required, group:name">
+                  <input id="no-group" data-validation="required">
                   <input type="submit">
                 </form>
                """
         formNode = sandbox formHtml
         $('body').append formNode
-        expect( validator.validateForm formNode ).toBe true
+        valid = document.querySelector("#valid")
+        invalid = document.querySelector("#invalid")
+        noGroup = document.querySelector("#no-group")
+        expect( validator.validateInput valid ).toBe true
+        expect( validator.validateInput invalid ).toBe true
+        expect( validator.validateInput noGroup ).toBe false
 
       it 'returns false if all the inputs are invalid', ->
         formHtml = """
                 <form action="javascript:void()">
-                  <input data-validation="required, group:name" type="text" id="input1">
-                  <input data-validation="format:[email], group:name" id="input2" type="email">
+                  <input id="field" data-validation="required, group:name">
+                  <input data-validation="required, group:name">
                   <input type="submit">
                 </form>
                """
         formNode = sandbox formHtml
         $('body').append formNode
-        expect( validator.validateForm formNode ).toBe false
+        input = document.querySelector("#field")
+        expect( validator.validateInput input ).toBe false
 
     describe 'with a custom validator', ->
       describe 'a format validation', ->
