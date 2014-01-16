@@ -30,7 +30,10 @@ class this.InputWithValidations
   withoutGroup: ->
     clone = this.input.cloneNode(false)
     validationAttribute = clone.getAttribute("data-validation")
-    validationAttributeWithoutGroups = validationAttribute.replace(' ', '').split(",").filter((e) -> !/group:/.test(e)).join(",")
+
+    validationAttributeWithoutGroups = validationAttribute.replace(' ', '').split(",").filter((e) ->
+      !/group:/.test(e)).join(",")
+
     clone.setAttribute("data-validation", validationAttributeWithoutGroups)
     new InputWithValidations(clone)
 

@@ -1,11 +1,5 @@
 errors = new Object
 
-unless NodeList::toArray
-  NodeList::toArray = ->
-    arr = []
-    `for(var i = 0, n; n = this[i]; ++i) arr.push(n);`
-    arr
-
 class this.FormValidator
   constructor: ->
     this._setupBuiltInValidations()
@@ -33,12 +27,14 @@ class this.FormValidator
     errors = new Errors
 
     if input.isInGroup()
-      inputsInGroup = input.group.fields().toArray().map (node) ->
-        new InputWithValidations(node).withoutGroup().asHtmlNode()
-      validationResults = inputsInGroup.map (node) => this.validateInput(node)
+      nodeList = input.group.fields()
+      # convert the nodeList to an array
+      nodesInGroup = []
+      `for(var i = nodeList.length; i--; nodesInGroup.unshift(nodeList[i]));`
 
-      if true in validationResults
-        return true
+      for node in nodesInGroup
+        validatableNode = new InputWithValidations(node).withoutGroup().asHtmlNode()
+        return true if this.validateInput(validatableNode)
     else
       this._performBuiltinValidations(input.asHtmlNode(), input.validations())
       this._performFormatValidation(input.asHtmlNode(), input.validations().format)
