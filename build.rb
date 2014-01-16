@@ -28,8 +28,7 @@ js = files.inject '' do |result, js_component|
             end
 end
 
-# contents = compiler.compile js
-contents = js
+contents = compiler.compile js
 
 File.open 'build/jquery.validator.js', "w" do |file|
   file.write contents
