@@ -5,7 +5,7 @@ compiler = Closure::Compiler.new(compilation_level: 'SIMPLE_OPTIMIZATIONS')
 
 files = [
   'vendor/parser/build/parser.js',
-  'vendor/Array.filter.polyfill.js',
+  'vendor/Array_filter_polyfill.js',
 
   'lib/monkey_patches.coffee',
   'lib/errors.coffee',
@@ -20,6 +20,7 @@ files = [
 ]
 
 js = files.inject '' do |result, js_component|
+  puts js_component
   result += if js_component =~ /.*\.coffee$/
               CoffeeScript.compile File.read(js_component)
             else
@@ -27,7 +28,8 @@ js = files.inject '' do |result, js_component|
             end
 end
 
-contents = compiler.compile js
+# contents = compiler.compile js
+contents = js
 
 File.open 'build/jquery.validator.js', "w" do |file|
   file.write contents

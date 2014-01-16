@@ -16,7 +16,7 @@ class this.Errors
       false
 
   fullMessages: ->
-    toSentence(this.errors).toLowerCase().capitalize()
+    window.toSentence(this.errors).toLowerCase().capitalize()
 
   all: ->
     this.errors
