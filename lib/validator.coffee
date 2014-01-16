@@ -22,17 +22,11 @@ class this.FormValidator
     for field in fields
       this.validateInput field
 
-    # TODO: can this loop and conditional be made shorter?
     for field in fields
       if field.hasAttribute 'data-error-message'
-        validationResults.push false
-      else
-        validationResults.push true
+        return false
 
-    if false in validationResults
-      false
-    else
-      true
+    return true
 
   validateInput: (inputNode) ->
     input = new InputWithValidations inputNode
