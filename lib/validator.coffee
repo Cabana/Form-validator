@@ -79,9 +79,8 @@ class this.FormValidator
     this.defineValidation 'required', (input, data) =>
       if new InputWithValidations(input).isEmpty()
         return "Can't be blank"
-      else if input.getAttribute("type") is "checkbox"
-        return "Most be checked" unless input.checked
-      else if input.getAttribute("type") is "radio"
+      else if input.getAttribute("type") is "checkbox" or
+              input.getAttribute("type") is "radio"
         return "Most be checked" unless input.checked
 
     this.defineValidation 'length', (input, data) =>
