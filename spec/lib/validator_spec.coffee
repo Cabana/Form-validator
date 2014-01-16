@@ -93,6 +93,15 @@ describe 'Validator', ->
           node = sandbox '<input data-validation="required" type="checkbox">'
           expect( validator.validateInput node ).toBe false
 
+      describe 'with a radiobutton', ->
+        it 'returns true is it is checked', ->
+          node = sandbox '<input data-validation="required" type="radio" checked>'
+          expect( validator.validateInput node ).toBe true
+
+        it 'returns false if it is not checked', ->
+          node = sandbox '<input data-validation="required" type="radio">'
+          expect( validator.validateInput node ).toBe false
+
     describe 'length validation', ->
       describe 'with only a min attribute', ->
         it 'returns true if the input value is within range', ->

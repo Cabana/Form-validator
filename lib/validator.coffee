@@ -22,6 +22,7 @@ class this.FormValidator
     for field in fields
       this.validateInput field
 
+    # TODO: can this loop and conditional be made shorter?
     for field in fields
       if field.hasAttribute 'data-error-message'
         validationResults.push false
@@ -38,7 +39,8 @@ class this.FormValidator
     errors = new Errors
 
     if input.isInGroup()
-      inputsInGroup = input.group.fields().toArray().map (node) -> new InputWithValidations(node).withoutGroup().asHtmlNode()
+      inputsInGroup = input.group.fields().toArray().map (node) ->
+        new InputWithValidations(node).withoutGroup().asHtmlNode()
       validationResults = inputsInGroup.map (node) => this.validateInput(node)
 
       if true in validationResults
@@ -78,6 +80,8 @@ class this.FormValidator
       if new InputWithValidations(input).isEmpty()
         return "Can't be blank"
       else if input.getAttribute("type") is "checkbox"
+        return "Most be checked" unless input.checked
+      else if input.getAttribute("type") is "radio"
         return "Most be checked" unless input.checked
 
     this.defineValidation 'length', (input, data) =>
