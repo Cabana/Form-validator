@@ -17,6 +17,7 @@ module.exports = function(config) {
       'vendor/jquery/jquery.min.js',
       'vendor/parser/build/parser.js',
       'vendor/jasmine-only.js',
+      'vendor/Array.filter.polyfill.js',
 
       'lib/monkey_patches.coffee',
       'lib/errors.coffee',
@@ -68,7 +69,8 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['Chrome', 'Safari', 'Firefox'],
+    // browsers: ['Chrome', 'Safari', 'Firefox'],
+    browsers: ['Chrome'],
 
 
     // If browser does not capture in given timeout [ms], kill it
