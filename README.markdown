@@ -146,7 +146,15 @@ $('form').validate({
 
   onBlur: [boolean], // whether or not to validate inputs on blur
 
-  formWrapperSelector: [string] // If the whole page is wrapped in one form element but can still contain several individual forms, use this option for only validating the fields within the current form. It should contain a selector (fx '.form-container') that each form is wrapped in. Default is undefined, this will validate all fields within the entire form.
+  formWrapperSelector: [string], // If the whole page is wrapped in one form element but can still contain several individual forms, use this option for only validating the fields within the current form. It should contain a selector (fx '.form-container') that each form is wrapped in. Default is undefined, this will validate all fields within the entire form.
+
+  ifInvalid: [function], // Function that will be run if the form is invalid.
+
+  ifValid: [function], // Function that will be run if the form is valid.
+
+  beforeValidation: [function], // Function that will be run before the validation.
+
+  afterValidation: [function], // Function that will be run after the validation.
 
 });
 ```
