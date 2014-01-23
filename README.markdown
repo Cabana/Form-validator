@@ -162,7 +162,9 @@ $('form').validate({
 ## Custom error messages
 To customize the error messages on an input use a `data-custom-error-message` attribute. Example:
 
-`<input data-validation="format:[email]" data-custom-error-message="My message" type="text">`
+```javascript
+<input data-validation="format:[email]" data-custom-error-message="My message" type="text">
+```
 
 ## Skipping validation
 If you ever wish to have a button that submits the form without performing any validation you can use a submit button like this:
