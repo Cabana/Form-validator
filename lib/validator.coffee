@@ -96,4 +96,4 @@ class this.FormValidator
 
     this.defineValidation 'group', (input, data) =>
 
-this.FormValidator.version = '0.3'
+this.FormValidator.version = '0.3.1'
