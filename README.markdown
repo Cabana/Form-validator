@@ -148,13 +148,13 @@ $('form').validate({
 
   formWrapperSelector: [string], // If the whole page is wrapped in one form element but can still contain several individual forms, use this option for only validating the fields within the current form. It should contain a selector (fx '.form-container') that each form is wrapped in. Default is undefined, this will validate all fields within the entire form.
 
-  ifInvalid: [function], // Function that will be run if the form is invalid.
+  ifInvalid: [function(submitEvent)], // Function that will be run if the form is invalid. It will be called with the submit event passed in.
 
-  ifValid: [function], // Function that will be run if the form is valid.
+  ifValid: [function(submitEvent)], // Function that will be run if the form is valid. It will be called with the submit event passed in.
 
-  beforeValidation: [function], // Function that will be run before the validation.
+  beforeValidation: [function(submitEvent)], // Function that will be run before the validation. It will be called with the submit event passed in.
 
-  afterValidation: [function], // Function that will be run after the validation.
+  afterValidation: [function(submitEvent)], // Function that will be run after the validation. It will be called with the submit event passed in.
 
 });
 ```
