@@ -31,7 +31,17 @@
     <form id="mainform" action="http://google.com/" method="get">
 
       <div class="field">
-        <input data-validation="required" type="text">
+        <input data-validation="required, group:foo" id="one" type="checkbox"><br>
+        <input data-validation="required, onlyIfChecked:one" type="text"><br>
+        <input data-validation="required, onlyIfChecked:one" type="text"><br>
+        <input data-validation="required, onlyIfChecked:one" type="text">
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <input data-validation="required, group:foo" type="checkbox" id="two"><br>
+        <input data-validation="required, onlyIfChecked:two" type="text">
       </div>
 
       <div class="actions">
