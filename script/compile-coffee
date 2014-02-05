@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+main() {
+  for FILE in $(find . -iname "*.coffee" | egrep -v "(node|vendor)")
+  do
+    coffee -c $FILE
+    rm -rf $FILE
+  done
+}
+
+main
