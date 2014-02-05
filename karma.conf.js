@@ -19,17 +19,17 @@ module.exports = function(config) {
       'vendor/jasmine-only.js',
       'vendor/Array.filter.polyfill.js',
 
-      'lib/monkey_patches.coffee',
-      'lib/errors.coffee',
-      'lib/group.coffee',
-      'lib/validatable_input.coffee',
-      'lib/range_validation.coffee',
-      'lib/character_count_validation.coffee',
-      'lib/word_count_validation.coffee',
-      'lib/validator.coffee',
+      'lib/monkey_patches.js',
+      'lib/errors.js',
+      'lib/group.js',
+      'lib/validatable_input.js',
+      'lib/range_validation.js',
+      'lib/character_count_validation.js',
+      'lib/word_count_validation.js',
+      'lib/validator.js',
 
       'spec/helpers/*.js',
-      'spec/lib/*_spec.coffee'
+      'spec/lib/*_spec.js'
     ],
 
 
@@ -70,7 +70,7 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     // browsers: ['Chrome', 'Safari', 'Firefox'],
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // If browser does not capture in given timeout [ms], kill it
