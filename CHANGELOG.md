@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.3 (unfinished)
+## 0.3.2
+- Compile all coffee script to javascript.
+
+## 0.3.1
+- Bug fixes.
+
+## 0.3
 - Bug fixes
 - Support for custom error messages.
 - Focus on first input with errors.
