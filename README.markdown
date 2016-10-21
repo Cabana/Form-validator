@@ -176,7 +176,7 @@ If you ever wish to have a button that submits the form without performing any v
 This could for example be useful if you needed a back button as part of a bigger flow.
 
 ## Further development
-The validator class is built using a [test driven](http://en.wikipedia.org/wiki/Test-driven_development) style. This simply means that no implementation code was written without having a test of it first. The testing framework used is [jasmine](http://pivotal.github.io/jasmine/).
+The validator class is built using a [test driven](http://en.wikipedia.org/wiki/Test-driven_development) style. This simply means that no implementation code was written without having a test of it first. The testing framework used is [jasmine](https://jasmine.github.io/).
 
 Setup [karma](http://karma-runner.github.io/) and run the tests with `karma start`.
 
